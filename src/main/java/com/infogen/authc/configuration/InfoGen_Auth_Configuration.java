@@ -11,7 +11,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.ZoneId;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.infogen.authc.InfoGen_Authc;
 import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
@@ -28,7 +29,7 @@ import com.infogen.core.tools.Tool_Core;
  * @version 1.0
  */
 public class InfoGen_Auth_Configuration {
-	private static final Logger LOGGER = Logger.getLogger(InfoGen_Auth_Configuration.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(InfoGen_Auth_Configuration.class.getName());
 	public final static ZoneId zoneid = ZoneId.of("GMT+08:00");
 	public final static Charset charset = StandardCharsets.UTF_8;
 

@@ -1,6 +1,7 @@
 package com.infogen.authc;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.infogen.authc.subject.Subject;
 import com.infogen.authc.subject.dao.Local_Subject_DAO;
@@ -14,7 +15,7 @@ import com.infogen.authc.subject.dao.Subject_DAO;
  * @version 1.0
  */
 public class InfoGen_Authc {
-	private static final Logger LOGGER = Logger.getLogger(InfoGen_Authc.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(InfoGen_Authc.class.getName());
 	private static final ThreadLocal<Subject> thread_local_subject = new ThreadLocal<>();
 	public static Subject_DAO subject_dao = new Local_Subject_DAO();
 

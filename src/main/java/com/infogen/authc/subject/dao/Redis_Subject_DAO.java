@@ -3,12 +3,13 @@ package com.infogen.authc.subject.dao;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import com.infogen.authc.subject.Subject;
 
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
-
-import com.infogen.authc.subject.Subject;
 
 /**
  * 基于redis的session管理器实现
@@ -18,7 +19,7 @@ import com.infogen.authc.subject.Subject;
  * @version 1.0
  */
 public class Redis_Subject_DAO extends Subject_DAO {
-	private static final Logger LOGGER = Logger.getLogger(Redis_Subject_DAO.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Redis_Subject_DAO.class.getName());
 	private JedisPool pool = null;
 
 	public Redis_Subject_DAO(JedisPool pool) {

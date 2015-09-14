@@ -8,7 +8,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.infogen.authc.configuration.InfoGen_Auth_Configuration;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Methods;
@@ -26,7 +27,7 @@ import com.infogen.core.util.CODE;
  * @email larry.lv.word@gmail.com
  */
 public class InfoGen_HTTP_Authc_Handle {
-	private static final Logger LOGGER = Logger.getLogger(InfoGen_HTTP_Authc_Handle.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(InfoGen_HTTP_Authc_Handle.class.getName());
 
 	public static final String TOKEN_NAME = "x-access-token";
 	// 初始化配置时赋值

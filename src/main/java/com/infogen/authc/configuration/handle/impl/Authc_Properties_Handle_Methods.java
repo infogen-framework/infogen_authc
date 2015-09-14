@@ -4,7 +4,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
 import com.infogen.core.tools.Tool_Core;
@@ -16,7 +17,7 @@ import com.infogen.core.tools.Tool_Core;
  * @version 1.0
  */
 public class Authc_Properties_Handle_Methods extends Authc_Properties_Handle {
-	private static final Logger LOGGER = Logger.getLogger(Authc_Properties_Handle_Methods.class.getName());
+	private static final Logger LOGGER = LogManager.getLogger(Authc_Properties_Handle_Methods.class.getName());
 	public static final Map<String, String[]> urls_equal = new HashMap<>();
 	public static final Map<String, String[]> urls_rule = new LinkedHashMap<>();
 
