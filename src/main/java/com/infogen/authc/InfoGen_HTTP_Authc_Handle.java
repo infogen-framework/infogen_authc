@@ -95,7 +95,7 @@ public class InfoGen_HTTP_Authc_Handle {
 			InfoGen_Authc.set(subject);
 		} catch (InfoGen_Auth_Exception e) {
 			LOGGER.info("认证失败:", e);
-			response.getWriter().write(Return.FAIL(e.name(), e.note()).toJson());
+			response.getWriter().write(Return.FAIL(CODE.authentication_fail, e).toJson());
 			return false;
 		} catch (Exception e) {
 			LOGGER.error("认证异常:", e);
