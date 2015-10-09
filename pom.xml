@@ -5,7 +5,7 @@
 	<groupId>com.infogen</groupId>
 	<artifactId>infogen_authc</artifactId>
 	<packaging>jar</packaging>
-	<version>V2.0.00R150901</version>
+	<version>V2.0.01R151009</version>
 
 	<name>infogen_limit</name>
 	<url>https://github.com/larrylgq/infogen_authc</url>
@@ -41,13 +41,13 @@
 		<dependency>
 			<groupId>com.infogen</groupId>
 			<artifactId>infogen_soa</artifactId>
-			<version>V2.0.00R150901</version>
+			<version>V2.0.01R151009</version>
 		</dependency>
 		<!-- redis -->
 		<dependency>
 			<groupId>redis.clients</groupId>
 			<artifactId>jedis</artifactId>
-			<version>2.7.2</version>
+			<version>2.7.3</version>
 		</dependency>
 
 	</dependencies>
