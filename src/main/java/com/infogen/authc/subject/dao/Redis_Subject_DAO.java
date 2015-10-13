@@ -35,10 +35,6 @@ public class Redis_Subject_DAO extends Subject_DAO {
 		return pool.getResource();
 	}
 
-	public void returnResource(Jedis redis) {
-		pool.returnResourceObject(redis);
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -60,7 +56,7 @@ public class Redis_Subject_DAO extends Subject_DAO {
 			take.hmset(key, map);
 			take.expire(key, expire);
 		} finally {
-			returnResource(take);
+			take.close();
 		}
 	}
 
@@ -82,7 +78,7 @@ public class Redis_Subject_DAO extends Subject_DAO {
 				return subject;
 			}
 		} finally {
-			returnResource(take);
+			take.close();
 		}
 		return null;
 	}
@@ -98,7 +94,7 @@ public class Redis_Subject_DAO extends Subject_DAO {
 		try {
 			take.hdel(subject_name);
 		} finally {
-			returnResource(take);
+			take.close();
 		}
 	}
 
