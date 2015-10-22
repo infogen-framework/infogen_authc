@@ -8,7 +8,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -21,7 +20,6 @@ import com.infogen.authc.InfoGen_HTTP_Authc_Handle;
  * @since 1.0
  * @version 1.0
  */
-@WebFilter(filterName = "InfoGen_HTTP_Filter_1", urlPatterns = { "/*" }, asyncSupported = true)
 public class InfoGen_HTTP_Authc_Filter implements Filter {
 	private InfoGen_HTTP_Authc_Handle authc = new InfoGen_HTTP_Authc_Handle();
 
