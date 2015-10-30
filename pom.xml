@@ -43,6 +43,12 @@
 			<artifactId>infogen_core</artifactId>
 			<version>V2.1.00R151028</version>
 		</dependency>
+		<!-- auth -->
+		<dependency>
+			<groupId>com.nimbusds</groupId>
+			<artifactId>nimbus-jose-jwt</artifactId>
+			<version>4.3.1</version>
+		</dependency>
 		<!-- redis -->
 		<dependency>
 			<groupId>redis.clients</groupId>
