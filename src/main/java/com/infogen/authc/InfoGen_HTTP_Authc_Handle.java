@@ -2,6 +2,7 @@ package com.infogen.authc;
 
 import java.io.IOException;
 import java.time.Clock;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.ServletException;
@@ -11,8 +12,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.infogen.authc.configuration.Comparison;
 import com.infogen.authc.configuration.InfoGen_Auth_Configuration;
-import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Methods;
+import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
 import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
 import com.infogen.authc.exception.impl.Session_Lose_Exception;
@@ -31,15 +33,14 @@ public class InfoGen_HTTP_Authc_Handle {
 
 	public static final String TOKEN_NAME = "x-access-token";
 	// 初始化配置时赋值
-	public static final Map<String, String[]> urls_equal = Authc_Properties_Handle_Methods.urls_equal;
-	public static final Map<String, String[]> urls_rule = Authc_Properties_Handle_Methods.urls_rule;
+	public static final List<Comparison> urls_rules = Authc_Properties_Handle_Authc.urls_rules;
 
 	public String[] authc(String requestURI) {
 		String[] roles = urls_equal.get(requestURI);
 		if (roles == null) {
-			for (String prefix : urls_rule.keySet()) {
+			for (String prefix : urls_startswith.keySet()) {
 				if (requestURI.startsWith(prefix)) {
-					return urls_rule.get(prefix);
+					return urls_startswith.get(prefix);
 				}
 			}
 		} else {
@@ -95,12 +96,12 @@ public class InfoGen_HTTP_Authc_Handle {
 			InfoGen_Authc.set(subject);
 		} catch (InfoGen_Auth_Exception e) {
 			LOGGER.info("认证失败:", e);
-			response.sendRedirect("apage.jsp");
+			response.sendRedirect("signin.html");
 			response.getWriter().write(Return.FAIL(CODE.authentication_fail, e).toJson());
 			return false;
 		} catch (Exception e) {
 			LOGGER.error("认证异常:", e);
-			response.sendRedirect("apage.jsp");
+			response.sendRedirect("signin.html");
 			response.getWriter().write(Return.FAIL(CODE.error).toJson());
 			return false;
 		}

@@ -10,6 +10,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.ZoneId;
+import java.util.Collections;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -17,7 +18,8 @@ import org.apache.logging.log4j.Logger;
 import com.infogen.authc.InfoGen_Authc;
 import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
-import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Methods;
+import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Users;
+import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.subject.dao.Subject_DAO;
 import com.infogen.core.tools.Tool_Core;
 
@@ -45,7 +47,8 @@ public class InfoGen_Auth_Configuration {
 	}
 
 	private final Authc_Properties_Handle properties_main = new Authc_Properties_Handle_Main();
-	private final Authc_Properties_Handle properties_methods = new Authc_Properties_Handle_Methods();
+	private final Authc_Properties_Handle properties_authc = new Authc_Properties_Handle_Authc();
+	private final Authc_Properties_Handle properties_users = new Authc_Properties_Handle_Users();
 
 	public void authc(Path authc_path) throws IOException {
 		load_configuration(authc_path);
@@ -70,14 +73,17 @@ public class InfoGen_Auth_Configuration {
 					continue;
 				} else if (line.equals("[main]")) {
 					properties_current = properties_main;
+				} else if (line.equals("[users]")) {
+					properties_current = properties_users;
 				} else if (line.equals("[authc]")) {
-					properties_current = properties_methods;
+					properties_current = properties_authc;
 				} else if (line != null && !line.isEmpty()) {
 					properties_current.handle(line);
 				} else {
 
 				}
 			}
+			Collections.reverse(Authc_Properties_Handle_Authc.urls_rules);
 		}
 	}
 
