@@ -26,8 +26,9 @@ import com.infogen.core.util.CODE;
 /**
  * HTTP接口的API认证的处理器,可以通过ini配置注入使用的session管理器
  * 
- * @author larry
- * @email larry.lv.word@gmail.com
+ * @author larry/larrylv@outlook.com/创建时间 2015年11月20日 下午6:59:38
+ * @since 1.0
+ * @version 1.0
  */
 public class InfoGen_HTTP_Authc_Handle {
 	private static final Logger LOGGER = LogManager.getLogger(InfoGen_HTTP_Authc_Handle.class.getName());
@@ -50,13 +51,9 @@ public class InfoGen_HTTP_Authc_Handle {
 		return null;
 	}
 
-	/**
-	 * js 前端页面加载时判断是否有 x-access-token 没有跳转到登录页面
-	 * 
-	 * ajax 调用后判断如果为没有权限执行登录操作
-	 * 
-	 * 只有存在 x-access-token 并通过有效期验证的才生成用于验证权限的subject
-	 */
+	// js 前端页面加载时判断是否有 x-access-token 没有跳转到登录页面
+	// ajax 调用后判断如果为没有权限执行登录操作
+	// 只有存在 x-access-token 并通过有效期验证的才生成用于验证权限的subject
 	public Boolean doFilter(String requestURI, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		// request.getRealPath("/")); F:\Tomcat 6.0\webapps\news\test
 		// System.out.println(request.getRequestURL()); // http://localhost:8080/news/main/list.jsp

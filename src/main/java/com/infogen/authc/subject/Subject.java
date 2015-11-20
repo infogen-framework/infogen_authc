@@ -84,12 +84,7 @@ public class Subject {
 		}
 	}
 
-	/**
-	 * 授权
-	 * 
-	 * @param roles
-	 * @throws Roles_Fail_Exception
-	 */
+	// 授权
 	public void hasRole(String[] roles) throws Roles_Fail_Exception {
 		if (roles == null || roles.length == 0) {
 			return;
