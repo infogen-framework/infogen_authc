@@ -8,6 +8,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.infogen.authc.configuration.Comparison;
 import com.infogen.authc.configuration.Comparison.Matching;
+import com.infogen.authc.configuration.Comparison.Operation;
+import com.infogen.authc.configuration.Comparison.Type;
 import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
 import com.infogen.core.tools.Tool_Core;
 
@@ -49,20 +51,32 @@ public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 		} else {
 			comparison.match = Matching.EQUAL;
 		}
-		comparison.key = key;
 		if (key.contains("*")) {
 			LOGGER.error("[authc] url格式错误 eg:/a/b  或 /a/* 或 *.html:".concat(line));
 			return;
 		}
+		comparison.key = key;
 
-		if (value.split(",")[0].trim().equals("authc")) {
+		// authc
+		String[] value_split = value.split(",");
+		if (value_split[0].trim().equals("authc")) {
+			if (value_split.length != 3) {
+				LOGGER.error("[authc] url格式错误 eg:/* = authc,redirect|api, roles[role1,role2] :".concat(line));
+				return;
+			}
+			comparison.operation = Operation.AUTHC;
+
+			if (value_split[1].equals("redirect")) {
+				comparison.type = Type.REDIRECT;
+			}
+
 			String roles = value.substring(value.indexOf("roles["));
 			roles = roles.replace("roles[", "");
 			roles = roles.replace("]", "");
 			roles = Tool_Core.trim(roles);
-
 			comparison.roles = roles.split(",");
-			urls_rules.add(comparison);
 		}
+
+		urls_rules.add(comparison);
 	}
 }

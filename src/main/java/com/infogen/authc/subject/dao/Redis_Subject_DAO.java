@@ -46,13 +46,14 @@ public class Redis_Subject_DAO extends Subject_DAO {
 	public void save(Subject subject) {
 		Jedis take = take();
 		Map<String, String> map = new HashMap<>();
+		map.put("subject", subject.getSubject());
 		map.put("audience", subject.getAudience());
 		map.put("issued_at", subject.getIssued_at().toString());
 		map.put("last_access_time", subject.getLast_access_time().toString());
 		map.put("remember", subject.getRemember().toString());
 		map.put("roles", subject.getRoles());
 		try {
-			String key = subject.getSubject();
+			String key = subject.getX_access_token();
 			take.hmset(key, map);
 			take.expire(key, expire);
 		} finally {
@@ -66,15 +67,15 @@ public class Redis_Subject_DAO extends Subject_DAO {
 	 * @see com.infogen.authc.cache.Subject_DAO#get(java.lang.String)
 	 */
 	@Override
-	public Subject get(String subject_name) {
+	public Subject get(String x_access_token) {
 		Jedis take = take();
 		try {
-			Map<String, String> hgetAll = take.hgetAll(subject_name);
+			Map<String, String> hgetAll = take.hgetAll(x_access_token);
 			if (hgetAll != null) {
-				Subject subject = new Subject(subject_name, hgetAll.get("audience"), Boolean.valueOf(hgetAll.get("remember")), hgetAll.get("roles"));
+				Subject subject = new Subject(x_access_token, hgetAll.get("subject"), hgetAll.get("audience"), Boolean.valueOf(hgetAll.get("remember")), hgetAll.get("roles"));
 				subject.setIssued_at(Long.valueOf(hgetAll.get("issued_at")));
 				subject.setLast_access_time(Long.valueOf(hgetAll.get("last_access_time")));
-				subject.setSubject(subject_name);
+				subject.setX_access_token(x_access_token);
 				return subject;
 			}
 		} finally {
@@ -89,10 +90,10 @@ public class Redis_Subject_DAO extends Subject_DAO {
 	 * @see com.infogen.authc.cache.Subject_DAO#delete(java.lang.String)
 	 */
 	@Override
-	public void delete(String subject_name) {
+	public void delete(String x_access_token) {
 		Jedis take = take();
 		try {
-			take.hdel(subject_name);
+			take.hdel(x_access_token);
 		} finally {
 			take.close();
 		}

@@ -16,6 +16,7 @@ import com.infogen.authc.exception.impl.Session_Expiration_Exception;
  * @version 1.0
  */
 public class Subject {
+	protected String x_access_token;
 	protected String subject;
 	/**
 	 * 受众ID,客户端类型 eg:android 应用 A/ios 应用 B/web 应用 C
@@ -38,11 +39,27 @@ public class Subject {
 	 */
 	protected String roles;
 
-	public Subject(String subject, String audience, Boolean remember, String roles) {
+	public Subject(String x_access_token, String subject, String audience, Boolean remember, String roles) {
+		this.x_access_token = x_access_token;
 		this.subject = subject;
 		this.audience = audience;
 		this.remember = remember;
 		this.roles = roles;
+	}
+
+	public Subject(String x_access_token, String subject, String audience, Boolean remember, String[] roles) {
+		StringBuilder stringbuilder = new StringBuilder();
+		for (int i = 0; i < roles.length; i++) {
+			if (i > 0) {
+				stringbuilder.append(",");
+			}
+			stringbuilder.append(roles[i]);
+		}
+		this.x_access_token = x_access_token;
+		this.subject = subject;
+		this.audience = audience;
+		this.remember = remember;
+		this.roles = stringbuilder.toString();
 	}
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -135,6 +152,14 @@ public class Subject {
 
 	public void setRoles(String roles) {
 		this.roles = roles;
+	}
+
+	public String getX_access_token() {
+		return x_access_token;
+	}
+
+	public void setX_access_token(String x_access_token) {
+		this.x_access_token = x_access_token;
 	}
 
 }

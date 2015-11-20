@@ -12,8 +12,6 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.infogen.authc.InfoGen_HTTP_Authc_Handle;
-
 /**
  * HTTP方式的安全验证框架的过滤器
  * 

@@ -1,9 +1,8 @@
-package com.infogen.authc;
+package com.infogen.http_filter;
 
 import java.io.IOException;
 import java.time.Clock;
 import java.util.List;
-import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -12,9 +11,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.infogen.authc.InfoGen_Authc;
 import com.infogen.authc.configuration.Comparison;
 import com.infogen.authc.configuration.InfoGen_Auth_Configuration;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
+import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
 import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
 import com.infogen.authc.exception.impl.Session_Lose_Exception;
@@ -34,17 +35,17 @@ public class InfoGen_HTTP_Authc_Handle {
 	public static final String TOKEN_NAME = "x-access-token";
 	// 初始化配置时赋值
 	public static final List<Comparison> urls_rules = Authc_Properties_Handle_Authc.urls_rules;
+	public static String signin = Authc_Properties_Handle_Main.signin;
 
-	public String[] authc(String requestURI) {
-		String[] roles = urls_equal.get(requestURI);
-		if (roles == null) {
-			for (String prefix : urls_startswith.keySet()) {
-				if (requestURI.startsWith(prefix)) {
-					return urls_startswith.get(prefix);
-				}
+	public Comparison authc(String requestURI) {
+		for (Comparison comparison : urls_rules) {
+			if (comparison.isEqual() && requestURI.equals(comparison.key)) {
+				return comparison;
+			} else if (comparison.isStartswith() && requestURI.startsWith(comparison.key)) {
+				return comparison;
+			} else if (comparison.isEndsWith() && requestURI.endsWith(comparison.key)) {
+				return comparison;
 			}
-		} else {
-			return roles;
 		}
 		return null;
 	}
@@ -63,12 +64,13 @@ public class InfoGen_HTTP_Authc_Handle {
 		// System.out.println(request.getServletPath()); // /main/list.jsp 配置spring mvc 的<mvc:default-servlet-handler />后始终为空
 		// System.out.println(request.getRequestURI()); // /news/main/list.jsp
 
+		Comparison comparison = authc(requestURI);
 		try {
-			// 当前请求页面 判断是否需要认证
-			String[] roles = authc(requestURI);
-
 			// 该方法不需要任何角色验证直接返回认证成功
-			if (roles == null) {
+			if (comparison == null) {
+				return true;
+			}
+			if (comparison.authc()) {
 				return true;
 			}
 
@@ -87,7 +89,7 @@ public class InfoGen_HTTP_Authc_Handle {
 				throw new Session_Lose_Exception();
 			}
 			subject.checkExpiration();
-			subject.hasRole(roles);
+			subject.hasRole(comparison.roles);
 
 			//
 			subject.setLast_access_time(Clock.system(InfoGen_Auth_Configuration.zoneid).millis());
@@ -95,14 +97,20 @@ public class InfoGen_HTTP_Authc_Handle {
 			// 缓存
 			InfoGen_Authc.set(subject);
 		} catch (InfoGen_Auth_Exception e) {
-			LOGGER.info("认证失败:", e);
-			response.sendRedirect("signin.html");
-			response.getWriter().write(Return.FAIL(CODE.authentication_fail, e).toJson());
+			LOGGER.info("认证失败:".concat(requestURI), e);
+			if (comparison.isRedirect()) {
+				response.sendRedirect(signin.concat("?code=" + e.code()));
+			} else {
+				response.getWriter().write(Return.FAIL(e.code(), e.note()).toJson());
+			}
 			return false;
 		} catch (Exception e) {
-			LOGGER.error("认证异常:", e);
-			response.sendRedirect("signin.html");
-			response.getWriter().write(Return.FAIL(CODE.error).toJson());
+			LOGGER.error("认证异常:".concat(requestURI), e);
+			if (comparison.isRedirect()) {
+				response.sendRedirect(signin.concat("?code=" + CODE.error.code));
+			} else {
+				response.getWriter().write(Return.FAIL(CODE.error).toJson());
+			}
 			return false;
 		}
 		return true;
