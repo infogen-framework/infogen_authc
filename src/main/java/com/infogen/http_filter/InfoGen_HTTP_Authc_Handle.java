@@ -32,7 +32,7 @@ import com.infogen.core.util.CODE;
 public class InfoGen_HTTP_Authc_Handle {
 	private static final Logger LOGGER = LogManager.getLogger(InfoGen_HTTP_Authc_Handle.class.getName());
 
-	public static final String TOKEN_NAME = "x-access-token";
+	public static final String X_ACCESS_TOKEN = "x-access-token";
 	// 初始化配置时赋值
 	public static final List<Comparison> urls_rules = Authc_Properties_Handle_Authc.urls_rules;
 	public static String signin = Authc_Properties_Handle_Main.signin;
@@ -75,9 +75,9 @@ public class InfoGen_HTTP_Authc_Handle {
 			}
 
 			// 认证
-			String x_access_token = request.getParameter(TOKEN_NAME);
+			String x_access_token = request.getParameter(X_ACCESS_TOKEN);
 			if (x_access_token == null) {
-				x_access_token = request.getHeader(TOKEN_NAME);
+				x_access_token = request.getHeader(X_ACCESS_TOKEN);
 			}
 			if (x_access_token == null || x_access_token.trim().isEmpty()) {
 				throw new Authentication_Fail_Exception();
@@ -93,7 +93,6 @@ public class InfoGen_HTTP_Authc_Handle {
 
 			//
 			subject.setLast_access_time(Clock.system(InfoGen_Auth_Configuration.zoneid).millis());
-			InfoGen_Authc.save(subject);
 			// 缓存
 			InfoGen_Authc.set(subject);
 		} catch (InfoGen_Auth_Exception e) {

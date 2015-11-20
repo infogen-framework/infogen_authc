@@ -32,10 +32,7 @@ public class InfoGen_Authc {
 	}
 
 	public static void set(Subject subject) {
-		thread_local_subject.set(subject);
-	}
-
-	public static void save(Subject subject) {
 		subject_dao.save(subject);
+		thread_local_subject.set(subject);
 	}
 }
