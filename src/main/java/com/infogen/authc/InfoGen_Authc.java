@@ -1,5 +1,6 @@
 package com.infogen.authc;
 
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

@@ -17,9 +17,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.infogen.authc.InfoGen_Authc;
 import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
+import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Users;
-import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.subject.dao.Subject_DAO;
 import com.infogen.core.tools.Tool_Core;
 
