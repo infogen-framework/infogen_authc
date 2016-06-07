@@ -1,12 +1,29 @@
 package com.infogen.authc;
 
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.time.ZoneId;
+import java.util.Collections;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
+import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
+import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
+import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Users;
 import com.infogen.authc.subject.Subject;
 import com.infogen.authc.subject.dao.Local_Subject_DAO;
 import com.infogen.authc.subject.dao.Subject_DAO;
+import com.infogen.core.tools.Tool_Core;
 
 /**
  * API认证框架的session本地缓存工具类,可以保存和获取subject
@@ -17,10 +34,21 @@ import com.infogen.authc.subject.dao.Subject_DAO;
  */
 public class InfoGen_Authc {
 	private static final Logger LOGGER = LogManager.getLogger(InfoGen_Authc.class.getName());
+	private static class InnerInstance {
+		public static final InfoGen_Authc instance = new InfoGen_Authc();
+	}
+
+	public static InfoGen_Authc getInstance() {
+		return InnerInstance.instance;
+	}
+
+	private InfoGen_Authc() {
+	}
+	
 	private static final ThreadLocal<Subject> thread_local_subject = new ThreadLocal<>();
 	public static Subject_DAO subject_dao = new Local_Subject_DAO();
-
-	public static Subject load(String x_access_token) {
+	
+	public static Subject get(String x_access_token) {
 		return subject_dao.get(x_access_token);
 	}
 
@@ -35,5 +63,41 @@ public class InfoGen_Authc {
 	public static void set(Subject subject) {
 		subject_dao.save(subject);
 		thread_local_subject.set(subject);
+	}
+	
+	public final static ZoneId zoneid = ZoneId.of("GMT+08:00");
+	public final static Charset charset = StandardCharsets.UTF_8;
+	
+	private final Authc_Properties_Handle properties_main = new Authc_Properties_Handle_Main();
+	private final Authc_Properties_Handle properties_authc = new Authc_Properties_Handle_Authc();
+	private final Authc_Properties_Handle properties_users = new Authc_Properties_Handle_Users();
+	public void authc(Path authc_path, Subject_DAO subject_dao) throws IOException {
+		InfoGen_Authc.subject_dao = subject_dao;
+		LOGGER.info("初始化权限配置");
+	}
+	public void authc(Path authc_path) throws IOException {
+		try (InputStream resourceAsStream = Files.newInputStream(authc_path, StandardOpenOption.READ); //
+				InputStreamReader inputstreamreader = new InputStreamReader(resourceAsStream, charset); //
+				BufferedReader reader = new BufferedReader(inputstreamreader)) {
+			Authc_Properties_Handle properties_current = null;
+			String line;
+			while ((line = reader.readLine()) != null) {
+				line = Tool_Core.trim(line);
+				if (line.startsWith("#")) {
+					continue;
+				} else if (line.equals("[main]")) {
+					properties_current = properties_main;
+				} else if (line.equals("[users]")) {
+					properties_current = properties_users;
+				} else if (line.equals("[authc]")) {
+					properties_current = properties_authc;
+				} else if (line != null && !line.isEmpty()) {
+					properties_current.handle(line);
+				} else {
+
+				}
+			}
+			Collections.reverse(Authc_Properties_Handle_Authc.urls_rules);
+		}
 	}
 }

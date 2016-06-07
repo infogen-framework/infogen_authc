@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.infogen.authc.InfoGen_Authc;
 import com.infogen.authc.configuration.Comparison;
-import com.infogen.authc.configuration.InfoGen_Auth_Configuration;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
@@ -81,7 +80,7 @@ public class InfoGen_HTTP_Authc_Handle {
 			}
 
 			//
-			Subject subject = InfoGen_Authc.load(x_access_token);
+			Subject subject = InfoGen_Authc.get(x_access_token);
 			if (subject == null) {
 				throw new Session_Lose_Exception();
 			}
@@ -89,7 +88,7 @@ public class InfoGen_HTTP_Authc_Handle {
 			subject.hasRole(comparison.roles);
 
 			//
-			subject.setLast_access_time(Clock.system(InfoGen_Auth_Configuration.zoneid).millis());
+			subject.setLast_access_time(Clock.system(InfoGen_Authc.zoneid).millis());
 			// 缓存
 			InfoGen_Authc.set(subject);
 		} catch (InfoGen_Auth_Exception e) {
