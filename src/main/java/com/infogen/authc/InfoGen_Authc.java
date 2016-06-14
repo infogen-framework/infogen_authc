@@ -20,6 +20,7 @@ import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Users;
+import com.infogen.authc.exception.impl.Session_Lose_Exception;
 import com.infogen.authc.subject.Subject;
 import com.infogen.authc.subject.dao.Local_Subject_DAO;
 import com.infogen.authc.subject.dao.Subject_DAO;
@@ -46,10 +47,10 @@ public class InfoGen_Authc {
 	}
 	
 	private static final ThreadLocal<Subject> thread_local_subject = new ThreadLocal<>();
-	public static Subject_DAO subject_dao = new Local_Subject_DAO();
+	private static Subject_DAO subject_dao = new Local_Subject_DAO();
 	
-	public static Subject get(String x_access_token) {
-		return subject_dao.get(x_access_token);
+	public static Subject read(String x_access_token) throws Session_Lose_Exception {
+		return subject_dao.read(x_access_token);
 	}
 
 	public static Subject get() {
@@ -60,8 +61,13 @@ public class InfoGen_Authc {
 		return subject;
 	}
 
-	public static void set(Subject subject) {
-		subject_dao.save(subject);
+	public static void create(Subject subject) {
+		subject_dao.create(subject);
+		thread_local_subject.set(subject);
+	}
+	
+	public static void update(Subject subject) throws Session_Lose_Exception {
+		subject_dao.update(subject);
 		thread_local_subject.set(subject);
 	}
 	
@@ -72,6 +78,7 @@ public class InfoGen_Authc {
 	private final Authc_Properties_Handle properties_authc = new Authc_Properties_Handle_Authc();
 	private final Authc_Properties_Handle properties_users = new Authc_Properties_Handle_Users();
 	public void authc(Path authc_path, Subject_DAO subject_dao) throws IOException {
+		authc(authc_path);
 		InfoGen_Authc.subject_dao = subject_dao;
 		LOGGER.info("初始化权限配置");
 	}

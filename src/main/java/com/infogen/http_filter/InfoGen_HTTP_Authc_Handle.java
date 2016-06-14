@@ -80,7 +80,7 @@ public class InfoGen_HTTP_Authc_Handle {
 			}
 
 			//
-			Subject subject = InfoGen_Authc.get(x_access_token);
+			Subject subject = InfoGen_Authc.read(x_access_token);
 			if (subject == null) {
 				throw new Session_Lose_Exception();
 			}
@@ -90,7 +90,7 @@ public class InfoGen_HTTP_Authc_Handle {
 			//
 			subject.setLast_access_time(Clock.system(InfoGen_Authc.zoneid).millis());
 			// 缓存
-			InfoGen_Authc.set(subject);
+			InfoGen_Authc.update(subject);
 		} catch (InfoGen_Auth_Exception e) {
 			LOGGER.info("认证失败:".concat(requestURI), e);
 			if (comparison.isRedirect()) {

@@ -38,6 +38,8 @@ public class Subject {
 	 * 用户具有的角色 使用,分隔 eg:admin,employee
 	 */
 	protected String roles;
+	protected Long session_overtime = 12 * 60 * 60 * 1000l;
+	protected Long remember_overtime = 5 * 24 * 60 * 60 * 1000l;
 
 	public Subject(String x_access_token, String subject, String audience, Boolean remember, String roles) {
 		this.x_access_token = x_access_token;
@@ -63,25 +65,20 @@ public class Subject {
 	}
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	protected long session_overtime = 12 * 60 * 60 * 1000;
-	protected long remember_overtime = 5 * 24 * 60 * 60 * 1000;
-	protected long max_overtime = 7 * 24 * 60 * 60 * 1000;
 
 	/**
 	 * 认证
 	 */
 	public void checkExpiration() throws Session_Expiration_Exception {
 		long millis = Clock.system(InfoGen_Authc.zoneid).millis();
-		long issued_at_overtime = millis - issued_at;
 		long last_access_time_overtime = millis - last_access_time;
-		if (issued_at_overtime > max_overtime) {
+		if (!remember && last_access_time_overtime > session_overtime) {
 			throw new Session_Expiration_Exception();
 		}
+		long issued_at_overtime = millis - issued_at;
 		if (remember && issued_at_overtime > remember_overtime && last_access_time_overtime > session_overtime) {
 			throw new Session_Expiration_Exception();
-		} else if (!remember && last_access_time_overtime > session_overtime) {
-			throw new Session_Expiration_Exception();
-		}
+		} 
 	}
 
 	// 授权
@@ -155,6 +152,34 @@ public class Subject {
 
 	public void setX_access_token(String x_access_token) {
 		this.x_access_token = x_access_token;
+	}
+
+	/**
+	 * @return the session_overtime
+	 */
+	public Long getSession_overtime() {
+		return session_overtime;
+	}
+
+	/**
+	 * @param session_overtime the session_overtime to set
+	 */
+	public void setSession_overtime(Long session_overtime) {
+		this.session_overtime = session_overtime;
+	}
+
+	/**
+	 * @return the remember_overtime
+	 */
+	public Long getRemember_overtime() {
+		return remember_overtime;
+	}
+
+	/**
+	 * @param remember_overtime the remember_overtime to set
+	 */
+	public void setRemember_overtime(Long remember_overtime) {
+		this.remember_overtime = remember_overtime;
 	}
 
 }
