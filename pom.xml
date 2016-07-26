@@ -3,9 +3,9 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>com.infogen</groupId>
-		<artifactId>infogen_aggregator</artifactId>
+		<artifactId>infogen_combine</artifactId>
 		<version>V1.0</version>
-		<relativePath>../infogen_aggregator</relativePath>
+		<relativePath>../infogen_combine</relativePath>
 	</parent>
 	<artifactId>infogen_authc</artifactId>
 	<packaging>jar</packaging>
@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>com.nimbusds</groupId>
 			<artifactId>nimbus-jose-jwt</artifactId>
-			<version>4.16.2</version>
+			<version>4.23</version>
 		</dependency>
 	</dependencies>
 	<build>
