@@ -65,10 +65,6 @@ public class Subject {
 	}
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-	/**
-	 * 认证
-	 */
 	public void checkExpiration() throws Session_Expiration_Exception {
 		long millis = Clock.system(InfoGen_Authc.zoneid).millis();
 		long last_access_time_overtime = millis - last_access_time;
@@ -78,7 +74,7 @@ public class Subject {
 		long issued_at_overtime = millis - issued_at;
 		if (remember && issued_at_overtime > remember_overtime && last_access_time_overtime > session_overtime) {
 			throw new Session_Expiration_Exception();
-		} 
+		}
 	}
 
 	// 授权
@@ -162,7 +158,8 @@ public class Subject {
 	}
 
 	/**
-	 * @param session_overtime the session_overtime to set
+	 * @param session_overtime
+	 *            the session_overtime to set
 	 */
 	public void setSession_overtime(Long session_overtime) {
 		this.session_overtime = session_overtime;
@@ -176,7 +173,8 @@ public class Subject {
 	}
 
 	/**
-	 * @param remember_overtime the remember_overtime to set
+	 * @param remember_overtime
+	 *            the remember_overtime to set
 	 */
 	public void setRemember_overtime(Long remember_overtime) {
 		this.remember_overtime = remember_overtime;
