@@ -11,7 +11,7 @@ import com.infogen.authc.configuration.Comparison.Matching;
 import com.infogen.authc.configuration.Comparison.Operation;
 import com.infogen.authc.configuration.Comparison.Type;
 import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
-import com.infogen.core.tools.Tool_Core;
+import com.infogen.core.tools.Tool_String;
 
 /**
  * 解析安全框架ini配置中[authc]方法权限配置的部分
@@ -37,8 +37,8 @@ public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 			LOGGER.error("格式错误 ".concat(line));
 			return;
 		}
-		String key = Tool_Core.trim(split[0]);
-		String value = Tool_Core.trim(split[1]);
+		String key = Tool_String.trim(split[0]);
+		String value = Tool_String.trim(split[1]);
 
 		Comparison comparison = new Comparison();
 
@@ -73,7 +73,7 @@ public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 			String roles = value.substring(value.indexOf("roles["));
 			roles = roles.replace("roles[", "");
 			roles = roles.replace("]", "");
-			roles = Tool_Core.trim(roles);
+			roles = Tool_String.trim(roles);
 			comparison.roles = roles.split(",");
 		}
 
