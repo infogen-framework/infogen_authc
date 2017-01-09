@@ -1,7 +1,7 @@
 package com.infogen.authc.exception.impl;
 
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
-import com.infogen.core.util.CODE;
+import com.infogen.util.AUTH_CODE;
 
 /**
  * 会话超时
@@ -21,7 +21,7 @@ public class Session_Expiration_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public Integer code() {
 		// TODO Auto-generated method stub
-		return CODE.session_expiration.code;
+		return AUTH_CODE.session_expiration.code;
 	}
 
 	/*
@@ -32,7 +32,7 @@ public class Session_Expiration_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public String name() {
 		// TODO Auto-generated method stub
-		return CODE.session_expiration.name();
+		return AUTH_CODE.session_expiration.name();
 	}
 
 	/*
@@ -43,7 +43,7 @@ public class Session_Expiration_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public String note() {
 		// TODO Auto-generated method stub
-		return CODE.session_expiration.note;
+		return AUTH_CODE.session_expiration.note;
 	}
 
 }

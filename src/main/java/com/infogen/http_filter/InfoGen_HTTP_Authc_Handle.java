@@ -1,26 +1,25 @@
 package com.infogen.http_filter;
 
 import java.io.IOException;
-import java.time.Clock;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.infogen.authc.InfoGen_Authc;
-import com.infogen.authc.configuration.Comparison;
+import com.infogen.authc.configuration.comparison.Comparison;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
 import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
+import com.infogen.authc.exception.impl.Roles_Fail_Exception;
+import com.infogen.authc.exception.impl.Session_Expiration_Exception;
 import com.infogen.authc.exception.impl.Session_Lose_Exception;
 import com.infogen.authc.subject.Subject;
 import com.infogen.core.json.Return;
-import com.infogen.core.util.CODE;
 
 /**
  * HTTP接口的API认证的处理器,可以通过ini配置注入使用的session管理器
@@ -32,18 +31,13 @@ import com.infogen.core.util.CODE;
 public class InfoGen_HTTP_Authc_Handle {
 	private static final Logger LOGGER = LogManager.getLogger(InfoGen_HTTP_Authc_Handle.class.getName());
 
-	public static final String X_ACCESS_TOKEN = "x-access-token";
 	// 初始化配置时赋值
 	public static final List<Comparison> urls_rules = Authc_Properties_Handle_Authc.urls_rules;
 	public static String signin = Authc_Properties_Handle_Main.signin;
 
-	public Comparison authc(String requestURI) {
+	public Comparison has(String requestURI) {
 		for (Comparison comparison : urls_rules) {
-			if (comparison.isEqual() && requestURI.equals(comparison.key)) {
-				return comparison;
-			} else if (comparison.isStartswith() && requestURI.startsWith(comparison.key)) {
-				return comparison;
-			} else if (comparison.isEndsWith() && requestURI.endsWith(comparison.key)) {
+			if (comparison.has(requestURI)) {
 				return comparison;
 			}
 		}
@@ -53,58 +47,53 @@ public class InfoGen_HTTP_Authc_Handle {
 	// js 前端页面加载时判断是否有 x-access-token 没有跳转到登录页面
 	// ajax 调用后判断如果为没有权限执行登录操作
 	// 只有存在 x-access-token 并通过有效期验证的才生成用于验证权限的subject
-	public Boolean doFilter(String requestURI, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public Boolean doFilter(String requestURI, String x_access_token, HttpServletResponse response) throws IOException, ServletException {
 		// request.getRealPath("/")); F:\Tomcat 6.0\webapps\news\test
-		// System.out.println(request.getRequestURL()); // http://localhost:8080/news/main/list.jsp
+		// System.out.println(request.getRequestURL()); //
+		// http://localhost:8080/news/main/list.jsp
 		// System.out.println(request.getContextPath()); // /news
-		// System.out.println(request.getServletPath()); // /main/list.jsp 配置spring mvc 的<mvc:default-servlet-handler />后始终为空
+		// System.out.println(request.getServletPath()); // /main/list.jsp
+		// 配置spring mvc 的<mvc:default-servlet-handler />后始终为空
 		// System.out.println(request.getRequestURI()); // /news/main/list.jsp
 
-		Comparison comparison = authc(requestURI);
+		Comparison comparison = has(requestURI);
 		try {
 			// 该方法不需要任何角色验证直接返回认证成功
 			if (comparison == null) {
 				return true;
 			}
-			if (comparison.authc()) {
+			if (comparison.anon()) {
 				return true;
 			}
+			String[] roles = comparison.roles;
 
 			// 认证
-			String x_access_token = request.getParameter(X_ACCESS_TOKEN);
-			if (x_access_token == null) {
-				x_access_token = request.getHeader(X_ACCESS_TOKEN);
-			}
 			if (x_access_token == null || x_access_token.trim().isEmpty()) {
 				throw new Authentication_Fail_Exception();
 			}
 
-			//
-			Subject subject = InfoGen_Authc.read(x_access_token);
-			if (subject == null) {
+			int indexOf = x_access_token.indexOf(".");
+			if (indexOf <= 0) {
 				throw new Session_Lose_Exception();
 			}
-			subject.checkExpiration();
-			subject.hasRole(comparison.roles);
+			String subject_name = x_access_token.substring(0, indexOf);
 
-			//
-			subject.setLast_access_time(Clock.system(InfoGen_Authc.zoneid).millis());
-			// 缓存
-			InfoGen_Authc.update(subject);
+			Subject subject = InfoGen_Authc.read(subject_name);
+			if (subject == null) {
+				throw new Session_Lose_Exception();
+			} else if (x_access_token.equals(subject.getX_access_token())) {
+				throw new Session_Expiration_Exception();
+			}
+
+			if (subject.hasRole(roles)) {
+				throw new Roles_Fail_Exception();
+			}
 		} catch (InfoGen_Auth_Exception e) {
 			LOGGER.info("认证失败:".concat(requestURI), e);
 			if (comparison.isRedirect()) {
 				response.sendRedirect(signin.concat("?code=" + e.code()));
 			} else {
-				response.getWriter().write(Return.FAIL(e.code(), e.note()).toJson());
-			}
-			return false;
-		} catch (Exception e) {
-			LOGGER.error("认证异常:".concat(requestURI), e);
-			if (comparison.isRedirect()) {
-				response.sendRedirect(signin.concat("?code=" + CODE.error.code));
-			} else {
-				response.getWriter().write(Return.FAIL(CODE.error).toJson());
+				response.getWriter().write(Return.create(e.code(), e.note()).toJson(""));
 			}
 			return false;
 		}

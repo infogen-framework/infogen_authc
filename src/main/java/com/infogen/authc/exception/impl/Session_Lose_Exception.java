@@ -1,7 +1,7 @@
 package com.infogen.authc.exception.impl;
 
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
-import com.infogen.core.util.CODE;
+import com.infogen.util.AUTH_CODE;
 
 /**
  * 没有这个会话
@@ -22,7 +22,7 @@ public class Session_Lose_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public Integer code() {
 		// TODO Auto-generated method stub
-		return CODE.session_lose.code;
+		return AUTH_CODE.session_lose.code;
 	}
 
 	/*
@@ -33,7 +33,7 @@ public class Session_Lose_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public String name() {
 		// TODO Auto-generated method stub
-		return CODE.session_lose.name();
+		return AUTH_CODE.session_lose.name();
 	}
 
 	/*
@@ -44,7 +44,7 @@ public class Session_Lose_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public String note() {
 		// TODO Auto-generated method stub
-		return CODE.session_lose.note;
+		return AUTH_CODE.session_lose.note;
 	}
 
 }

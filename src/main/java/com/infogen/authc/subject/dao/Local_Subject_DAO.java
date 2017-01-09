@@ -1,6 +1,5 @@
 package com.infogen.authc.subject.dao;
 
-import com.infogen.authc.exception.impl.Session_Lose_Exception;
 import com.infogen.authc.subject.Subject;
 import com.infogen.core.structure.map.LRULinkedHashMap;
 
@@ -12,7 +11,7 @@ import com.infogen.core.structure.map.LRULinkedHashMap;
  * @version 1.0
  */
 public class Local_Subject_DAO extends Subject_DAO {
-	private LRULinkedHashMap<String, Subject> map = new LRULinkedHashMap<>(500000);
+	private LRULinkedHashMap<String, Subject> map = new LRULinkedHashMap<>(1000000);
 
 	/*
 	 * (non-Javadoc)
@@ -24,28 +23,34 @@ public class Local_Subject_DAO extends Subject_DAO {
 		map.remove(subject_name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.infogen.authc.subject.dao.Subject_DAO#create(com.infogen.authc.subject.Subject)
 	 */
 	@Override
 	public void create(Subject subject) {
-		map.put(subject.getX_access_token(), subject);
+		map.put(subject.getSubject(), subject);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.infogen.authc.subject.dao.Subject_DAO#read(java.lang.String)
 	 */
 	@Override
-	public Subject read(String subject_name) throws Session_Lose_Exception {
+	public Subject read(String subject_name) {
 		return map.get(subject_name);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.infogen.authc.subject.dao.Subject_DAO#update(com.infogen.authc.subject.Subject)
 	 */
 	@Override
-	public void update(Subject subject) throws Session_Lose_Exception {
-		map.put(subject.getX_access_token(), subject);
+	public void update(Subject subject) {
+		map.put(subject.getSubject(), subject);
 	}
 
 }

@@ -6,10 +6,12 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.infogen.authc.configuration.Comparison;
-import com.infogen.authc.configuration.Comparison.Matching;
-import com.infogen.authc.configuration.Comparison.Operation;
-import com.infogen.authc.configuration.Comparison.Type;
+import com.infogen.authc.configuration.comparison.Comparison;
+import com.infogen.authc.configuration.comparison.Comparison.Operation;
+import com.infogen.authc.configuration.comparison.Comparison.Type;
+import com.infogen.authc.configuration.comparison.impl.Comparison_End;
+import com.infogen.authc.configuration.comparison.impl.Comparison_Equal;
+import com.infogen.authc.configuration.comparison.impl.Comparison_Start;
 import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
 import com.infogen.core.tools.Tool_String;
 
@@ -40,16 +42,16 @@ public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 		String key = Tool_String.trim(split[0]);
 		String value = Tool_String.trim(split[1]);
 
-		Comparison comparison = new Comparison();
+		Comparison comparison = null;
 
 		if (key.endsWith("*")) {
 			key = key.substring(0, key.length() - 1);
-			comparison.match = Matching.STARTSWITH;
+			comparison = new Comparison_Start();
 		} else if (key.startsWith("*")) {
 			key = key.substring(1, key.length());
-			comparison.match = Matching.ENDSWITH;
+			comparison = new Comparison_End();
 		} else {
-			comparison.match = Matching.EQUAL;
+			comparison = new Comparison_Equal();
 		}
 		if (key.contains("*")) {
 			LOGGER.error("[authc] url格式错误 eg:/a/b  或 /a/* 或 *.html:".concat(line));

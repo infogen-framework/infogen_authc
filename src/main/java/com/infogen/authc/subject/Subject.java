@@ -3,10 +3,12 @@ package com.infogen.authc.subject;
 import java.time.Clock;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import com.infogen.authc.InfoGen_Authc;
+import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
 import com.infogen.authc.exception.impl.Roles_Fail_Exception;
-import com.infogen.authc.exception.impl.Session_Expiration_Exception;
+import com.infogen.core.json.JSONObject;
 
 /**
  * 一个安全认证实例
@@ -15,13 +17,10 @@ import com.infogen.authc.exception.impl.Session_Expiration_Exception;
  * @since 1.0
  * @version 1.0
  */
-public class Subject {
+public class Subject extends JSONObject {
+	private static final long serialVersionUID = 162572115555027765L;
 	protected String x_access_token;
 	protected String subject;
-	/**
-	 * 受众ID,客户端类型 eg:android 应用 A/ios 应用 B/web 应用 C
-	 */
-	protected String audience;
 	/**
 	 * 是否开启记住我
 	 */
@@ -31,25 +30,17 @@ public class Subject {
 	 */
 	protected Long issued_at = Clock.system(InfoGen_Authc.zoneid).millis();
 	/**
-	 * 最后一次通过认证时间
-	 */
-	protected Long last_access_time = Clock.system(InfoGen_Authc.zoneid).millis();
-	/**
 	 * 用户具有的角色 使用,分隔 eg:admin,employee
 	 */
 	protected String roles;
-	protected Long session_overtime = 12 * 60 * 60 * 1000l;
-	protected Long remember_overtime = 5 * 24 * 60 * 60 * 1000l;
 
-	public Subject(String x_access_token, String subject, String audience, Boolean remember, String roles) {
-		this.x_access_token = x_access_token;
+	public Subject(String subject, String audience, Boolean remember, String roles) {
 		this.subject = subject;
-		this.audience = audience;
 		this.remember = remember;
 		this.roles = roles;
 	}
 
-	public Subject(String x_access_token, String subject, String audience, Boolean remember, String[] roles) {
+	public Subject(String subject, String audience, Boolean remember, String[] roles) {
 		StringBuilder stringbuilder = new StringBuilder();
 		for (int i = 0; i < roles.length; i++) {
 			if (i > 0) {
@@ -57,49 +48,33 @@ public class Subject {
 			}
 			stringbuilder.append(roles[i]);
 		}
-		this.x_access_token = x_access_token;
+		String epoch_time = Long.toString(System.currentTimeMillis() / 1000);
+		this.x_access_token = subject.concat(".").concat(UUID.randomUUID().toString().replaceAll("-", "")).concat(".").concat(epoch_time);
 		this.subject = subject;
-		this.audience = audience;
 		this.remember = remember;
 		this.roles = stringbuilder.toString();
 	}
-	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-	public void checkExpiration() throws Session_Expiration_Exception {
-		long millis = Clock.system(InfoGen_Authc.zoneid).millis();
-		long last_access_time_overtime = millis - last_access_time;
-		if (!remember && last_access_time_overtime > session_overtime) {
-			throw new Session_Expiration_Exception();
-		}
-		long issued_at_overtime = millis - issued_at;
-		if (remember && issued_at_overtime > remember_overtime && last_access_time_overtime > session_overtime) {
-			throw new Session_Expiration_Exception();
-		}
+	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	public void authentication(String x_access_token) throws Authentication_Fail_Exception {
+
 	}
 
 	// 授权
-	public void hasRole(String[] roles) throws Roles_Fail_Exception {
+	public Boolean hasRole(String[] roles) throws Roles_Fail_Exception {
 		if (roles == null || roles.length == 0) {
-			return;
+			return true;
 		}
 		if (this.roles == null) {
-			throw new Roles_Fail_Exception();
+			return false;
 		}
 		List<String> roles_list = Arrays.asList(this.roles.split(","));
 		for (String string : roles) {
 			if (roles_list.contains(string)) {
-				return;
+				return true;
 			}
 		}
-		throw new Roles_Fail_Exception();
-	}
-
-	public String getAudience() {
-		return audience;
-	}
-
-	public void setAudience(String audience) {
-		this.audience = audience;
+		return false;
 	}
 
 	public String getSubject() {
@@ -126,14 +101,6 @@ public class Subject {
 		this.issued_at = issued_at;
 	}
 
-	public Long getLast_access_time() {
-		return last_access_time;
-	}
-
-	public void setLast_access_time(Long last_access_time) {
-		this.last_access_time = last_access_time;
-	}
-
 	public String getRoles() {
 		return roles;
 	}
@@ -148,36 +115,6 @@ public class Subject {
 
 	public void setX_access_token(String x_access_token) {
 		this.x_access_token = x_access_token;
-	}
-
-	/**
-	 * @return the session_overtime
-	 */
-	public Long getSession_overtime() {
-		return session_overtime;
-	}
-
-	/**
-	 * @param session_overtime
-	 *            the session_overtime to set
-	 */
-	public void setSession_overtime(Long session_overtime) {
-		this.session_overtime = session_overtime;
-	}
-
-	/**
-	 * @return the remember_overtime
-	 */
-	public Long getRemember_overtime() {
-		return remember_overtime;
-	}
-
-	/**
-	 * @param remember_overtime
-	 *            the remember_overtime to set
-	 */
-	public void setRemember_overtime(Long remember_overtime) {
-		this.remember_overtime = remember_overtime;
 	}
 
 }
