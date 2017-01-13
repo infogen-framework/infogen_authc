@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.UUID;
 
 import com.infogen.authc.InfoGen_Authc;
-import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
 import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 import com.infogen.core.json.JSONObject;
 
@@ -35,9 +34,7 @@ public class Subject extends JSONObject {
 	protected String roles;
 
 	public Subject(String subject, String audience, Boolean remember, String roles) {
-		this.subject = subject;
-		this.remember = remember;
-		this.roles = roles;
+		this(subject, audience, remember, roles == null ? new String[] {} : roles.split(","));
 	}
 
 	public Subject(String subject, String audience, Boolean remember, String[] roles) {
@@ -56,12 +53,8 @@ public class Subject extends JSONObject {
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	public void authentication(String x_access_token) throws Authentication_Fail_Exception {
-
-	}
-
 	// 授权
-	public Boolean hasRole(String[] roles) throws Roles_Fail_Exception {
+	public Boolean verifyRole(String[] roles) throws Roles_Fail_Exception {
 		if (roles == null || roles.length == 0) {
 			return true;
 		}

@@ -10,9 +10,9 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.infogen.authc.InfoGen_Authc;
-import com.infogen.authc.configuration.comparison.Comparison;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
+import com.infogen.authc.configuration.resource.Resource;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
 import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
 import com.infogen.authc.exception.impl.Roles_Fail_Exception;
@@ -32,13 +32,13 @@ public class InfoGen_HTTP_Authc_Handle {
 	private static final Logger LOGGER = LogManager.getLogger(InfoGen_HTTP_Authc_Handle.class.getName());
 
 	// 初始化配置时赋值
-	public static final List<Comparison> urls_rules = Authc_Properties_Handle_Authc.urls_rules;
+	public static final List<Resource> urls_rules = Authc_Properties_Handle_Authc.urls_rules;
 	public static String signin = Authc_Properties_Handle_Main.signin;
 
-	public Comparison has(String requestURI) {
-		for (Comparison comparison : urls_rules) {
-			if (comparison.has(requestURI)) {
-				return comparison;
+	public Resource has(String requestURI) {
+		for (Resource operator : urls_rules) {
+			if (operator.has(requestURI)) {
+				return operator;
 			}
 		}
 		return null;
@@ -56,16 +56,17 @@ public class InfoGen_HTTP_Authc_Handle {
 		// 配置spring mvc 的<mvc:default-servlet-handler />后始终为空
 		// System.out.println(request.getRequestURI()); // /news/main/list.jsp
 
-		Comparison comparison = has(requestURI);
+		Resource operator = has(requestURI);
 		try {
 			// 该方法不需要任何角色验证直接返回认证成功
-			if (comparison == null) {
+			if (operator == null) {
 				return true;
 			}
-			if (comparison.anon()) {
+			if (operator.anon()) {
 				return true;
 			}
-			String[] roles = comparison.roles;
+			// 需要验证的角色
+			String[] roles = operator.roles;
 
 			// 认证
 			if (x_access_token == null || x_access_token.trim().isEmpty()) {
@@ -81,16 +82,16 @@ public class InfoGen_HTTP_Authc_Handle {
 			Subject subject = InfoGen_Authc.read(subject_name);
 			if (subject == null) {
 				throw new Session_Lose_Exception();
-			} else if (x_access_token.equals(subject.getX_access_token())) {
+			} else if (!x_access_token.equals(subject.getX_access_token())) {
 				throw new Session_Expiration_Exception();
 			}
 
-			if (subject.hasRole(roles)) {
+			if (subject.verifyRole(roles)) {
 				throw new Roles_Fail_Exception();
 			}
 		} catch (InfoGen_Auth_Exception e) {
 			LOGGER.info("认证失败:".concat(requestURI), e);
-			if (comparison.isRedirect()) {
+			if (operator.isRedirect()) {
 				response.sendRedirect(signin.concat("?code=" + e.code()));
 			} else {
 				response.getWriter().write(Return.create(e.code(), e.note()).toJson(""));

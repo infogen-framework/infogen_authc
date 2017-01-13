@@ -6,13 +6,13 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.infogen.authc.configuration.comparison.Comparison;
-import com.infogen.authc.configuration.comparison.Comparison.Operation;
-import com.infogen.authc.configuration.comparison.Comparison.Type;
-import com.infogen.authc.configuration.comparison.impl.Comparison_End;
-import com.infogen.authc.configuration.comparison.impl.Comparison_Equal;
-import com.infogen.authc.configuration.comparison.impl.Comparison_Start;
 import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
+import com.infogen.authc.configuration.resource.Resource;
+import com.infogen.authc.configuration.resource.Resource.Operation;
+import com.infogen.authc.configuration.resource.Resource.Type;
+import com.infogen.authc.configuration.resource.impl.Resource_End;
+import com.infogen.authc.configuration.resource.impl.Resource_Equal;
+import com.infogen.authc.configuration.resource.impl.Resource_Start;
 import com.infogen.core.tools.Tool_String;
 
 /**
@@ -25,7 +25,7 @@ import com.infogen.core.tools.Tool_String;
 public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 	private static final Logger LOGGER = LogManager.getLogger(Authc_Properties_Handle_Authc.class.getName());
 
-	public static final List<Comparison> urls_rules = new LinkedList<>();
+	public static final List<Resource> urls_rules = new LinkedList<>();
 
 	/*
 	 * (non-Javadoc)
@@ -39,25 +39,25 @@ public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 			LOGGER.error("格式错误 ".concat(line));
 			return;
 		}
-		String key = Tool_String.trim(split[0]);
+		String resource = Tool_String.trim(split[0]);
 		String value = Tool_String.trim(split[1]);
 
-		Comparison comparison = null;
+		Resource comparison = null;
 
-		if (key.endsWith("*")) {
-			key = key.substring(0, key.length() - 1);
-			comparison = new Comparison_Start();
-		} else if (key.startsWith("*")) {
-			key = key.substring(1, key.length());
-			comparison = new Comparison_End();
+		if (resource.endsWith("*")) {
+			resource = resource.substring(0, resource.length() - 1);
+			comparison = new Resource_Start();
+		} else if (resource.startsWith("*")) {
+			resource = resource.substring(1, resource.length());
+			comparison = new Resource_End();
 		} else {
-			comparison = new Comparison_Equal();
+			comparison = new Resource_Equal();
 		}
-		if (key.contains("*")) {
+		if (resource.contains("*")) {
 			LOGGER.error("[authc] url格式错误 eg:/a/b  或 /a/* 或 *.html:".concat(line));
 			return;
 		}
-		comparison.key = key;
+		comparison.uri = resource;
 
 		// authc
 		String[] value_split = value.split(",");
@@ -78,7 +78,6 @@ public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 			roles = Tool_String.trim(roles);
 			comparison.roles = roles.split(",");
 		}
-
 		urls_rules.add(comparison);
 	}
 }

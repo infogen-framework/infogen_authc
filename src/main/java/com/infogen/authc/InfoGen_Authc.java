@@ -12,6 +12,10 @@ import java.nio.file.StandardOpenOption;
 import java.time.ZoneId;
 import java.util.Collections;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -67,7 +71,7 @@ public class InfoGen_Authc {
 					continue;
 				} else if (line.equals("[main]")) {
 					properties_current = properties_main;
-				}else if (line.equals("[authc]")) {
+				} else if (line.equals("[authc]")) {
 					properties_current = properties_authc;
 				} else if (line != null && !line.isEmpty()) {
 					properties_current.handle(line);
@@ -79,34 +83,49 @@ public class InfoGen_Authc {
 		}
 	}
 
+	private static Integer remember_timeout = 60 * 60 * 24 * 7;
 	private static final ThreadLocal<Subject> thread_local_subject = new ThreadLocal<>();
+	public static final ThreadLocal<HttpServletRequest> thread_local_request = new ThreadLocal<>();
+	public static final ThreadLocal<HttpServletResponse> thread_local_response = new ThreadLocal<>();
 	private static Subject_DAO subject_dao = new Local_Subject_DAO();
 
 	public static Subject read(String subject_name) {
 		return subject_dao.read(subject_name);
 	}
 
-	public static Subject get() {
+	public static Subject read() {
 		Subject subject = thread_local_subject.get();
-		if (subject == null) {
-			LOGGER.warn("没有找到当前线程存储的subject,检查是否有存入,或当前代码是否是在新创建的线程里执行的");
-		}
 		return subject;
 	}
 
-	public static void set(Subject subject) {
-		thread_local_subject.set(subject);
+	private static void set_cookie(String x_access_token, String value, Integer max_age) {
+		HttpServletResponse response = thread_local_response.get();
+
+		Cookie cookie = new Cookie(x_access_token, value);
+		cookie.setPath("/");
+		cookie.setMaxAge(max_age);
+		// cookie.setSecure(true);
+		// cookie.setHttpOnly(true);
+		response.addCookie(cookie);
 	}
 
 	public static void create(Subject subject) {
+		thread_local_subject.set(subject);
+		if (subject.getRemember()) {
+			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), remember_timeout);
+		} else {
+			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), -1);
+		}
 		subject_dao.create(subject);
 	}
 
 	public static void delete(String subject_name) {
+		thread_local_subject.remove();
 		subject_dao.delete(subject_name);
 	}
 
 	public static void update(Subject subject) throws Session_Lose_Exception {
+		thread_local_subject.set(subject);
 		subject_dao.update(subject);
 	}
 }
