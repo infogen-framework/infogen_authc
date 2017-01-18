@@ -7,12 +7,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
-import com.infogen.authc.configuration.resource.Resource;
-import com.infogen.authc.configuration.resource.Resource.Operation;
-import com.infogen.authc.configuration.resource.Resource.Type;
-import com.infogen.authc.configuration.resource.impl.Resource_End;
-import com.infogen.authc.configuration.resource.impl.Resource_Equal;
-import com.infogen.authc.configuration.resource.impl.Resource_Start;
+import com.infogen.authc.resource.Resource;
+import com.infogen.authc.resource.Resource.Operation;
+import com.infogen.authc.resource.Resource.Type;
+import com.infogen.authc.resource.impl.Resource_End;
+import com.infogen.authc.resource.impl.Resource_Equal;
+import com.infogen.authc.resource.impl.Resource_Start;
 import com.infogen.core.tools.Tool_String;
 
 /**
@@ -66,10 +66,10 @@ public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 				LOGGER.error("[authc] url格式错误 eg:/* = authc,redirect|api, roles[role1,role2] :".concat(line));
 				return;
 			}
-			comparison.operation = Operation.AUTHC;
+			comparison.operation = Operation.AUTHC.name();
 
 			if (value_split[1].equals("redirect")) {
-				comparison.type = Type.REDIRECT;
+				comparison.type = Type.REDIRECT.name();
 			}
 
 			String roles = value.substring(value.indexOf("roles["));

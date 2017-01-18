@@ -1,9 +1,9 @@
 /**
  * 
  */
-package com.infogen.authc.configuration.resource.impl;
+package com.infogen.authc.resource.impl;
 
-import com.infogen.authc.configuration.resource.Resource;
+import com.infogen.authc.resource.Resource;
 
 /**
  * @author larry

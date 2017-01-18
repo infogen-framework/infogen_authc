@@ -12,12 +12,12 @@ import org.apache.logging.log4j.Logger;
 import com.infogen.authc.InfoGen_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
-import com.infogen.authc.configuration.resource.Resource;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
 import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
 import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 import com.infogen.authc.exception.impl.Session_Expiration_Exception;
 import com.infogen.authc.exception.impl.Session_Lose_Exception;
+import com.infogen.authc.resource.Resource;
 import com.infogen.authc.subject.Subject;
 import com.infogen.core.json.Return;
 
