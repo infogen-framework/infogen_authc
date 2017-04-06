@@ -80,6 +80,7 @@ public class InfoGen_Authc {
 				}
 			}
 			Collections.reverse(Authc_Properties_Handle_Authc.urls_rules);
+			LOGGER.info("初始化 InfoGen_Authc 成功");
 		}
 	}
 
@@ -89,13 +90,35 @@ public class InfoGen_Authc {
 	public static final ThreadLocal<HttpServletResponse> thread_local_response = new ThreadLocal<>();
 	private static Subject_DAO subject_dao = new Local_Subject_DAO();
 
+	public static void create(Subject subject) {
+		thread_local_subject.set(subject);
+		if (subject.getRemember()) {
+			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), remember_timeout);
+		} else {
+			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), -1);
+		}
+		subject_dao.create(subject);
+	}
+
 	public static Subject read(String subject_name) {
-		return subject_dao.read(subject_name);
+		Subject subject = subject_dao.read(subject_name);
+		thread_local_subject.set(subject);
+		return subject;
 	}
 
 	public static Subject read() {
 		Subject subject = thread_local_subject.get();
 		return subject;
+	}
+
+	public static void delete(String subject_name) {
+		thread_local_subject.remove();
+		subject_dao.delete(subject_name);
+	}
+
+	public static void update(Subject subject) {
+		thread_local_subject.set(subject);
+		subject_dao.update(subject);
 	}
 
 	private static void set_cookie(String x_access_token, String value, Integer max_age) {
@@ -109,23 +132,4 @@ public class InfoGen_Authc {
 		response.addCookie(cookie);
 	}
 
-	public static void create(Subject subject) {
-		thread_local_subject.set(subject);
-		if (subject.getRemember()) {
-			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), remember_timeout);
-		} else {
-			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), -1);
-		}
-		subject_dao.create(subject);
-	}
-
-	public static void delete(String subject_name) {
-		thread_local_subject.remove();
-		subject_dao.delete(subject_name);
-	}
-
-	public static void update(Subject subject) throws Session_Lose_Exception {
-		thread_local_subject.set(subject);
-		subject_dao.update(subject);
-	}
 }

@@ -84,10 +84,10 @@ public class InfoGen_HTTP_Authc_Handle {
 				throw new Session_Lose_Exception();
 			} else if (!x_access_token.equals(subject.getX_access_token())) {
 				throw new Session_Expiration_Exception();
-			}
-
-			if (subject.verifyRole(roles)) {
+			} else if (subject.verifyRole(roles)) {
 				throw new Roles_Fail_Exception();
+			}else{
+				
 			}
 		} catch (InfoGen_Auth_Exception e) {
 			LOGGER.info("认证失败:".concat(requestURI), e);
