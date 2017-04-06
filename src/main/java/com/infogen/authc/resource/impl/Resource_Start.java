@@ -6,9 +6,10 @@ package com.infogen.authc.resource.impl;
 import com.infogen.authc.resource.Resource;
 
 /**
- * @author larry
- * @email   larrylv@outlook.com
- * @version 创建时间 2017年1月9日 下午6:18:17
+ * 
+ * @author larry/larrylv@outlook.com/创建时间 2015年5月4日 下午2:11:06
+ * @since 1.0
+ * @version 1.0
  */
 public class Resource_Start extends Resource {
 
