@@ -22,7 +22,6 @@ import org.apache.logging.log4j.Logger;
 import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
-import com.infogen.authc.exception.impl.Session_Lose_Exception;
 import com.infogen.authc.subject.Subject;
 import com.infogen.authc.subject.dao.Local_Subject_DAO;
 import com.infogen.authc.subject.dao.Subject_DAO;
