@@ -33,11 +33,11 @@ public class Subject extends JSONObject {
 	 */
 	protected String roles;
 
-	public Subject(String subject, String audience, Boolean remember, String roles) {
-		this(subject, audience, remember, roles == null ? new String[] {} : roles.split(","));
+	public Subject(String subject, Boolean remember, String roles) {
+		this(subject, remember, roles == null ? new String[] {} : roles.split(","));
 	}
 
-	public Subject(String subject, String audience, Boolean remember, String[] roles) {
+	public Subject(String subject, Boolean remember, String[] roles) {
 		StringBuilder stringbuilder = new StringBuilder();
 		for (int i = 0; i < roles.length; i++) {
 			if (i > 0) {

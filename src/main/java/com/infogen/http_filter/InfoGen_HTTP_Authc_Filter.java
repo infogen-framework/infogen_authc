@@ -31,7 +31,6 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 		HttpServletResponse response = (HttpServletResponse) sresponse;
 		InfoGen_Authc.thread_local_request.set(request);
 		InfoGen_Authc.thread_local_response.set(response);
-
 		// 验证权限
 		String requestURI = request.getRequestURI();
 		String contextPath = request.getContextPath();
