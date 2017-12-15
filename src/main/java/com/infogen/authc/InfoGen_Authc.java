@@ -122,13 +122,14 @@ public class InfoGen_Authc {
 
 	private static void set_cookie(String x_access_token, String value, Integer max_age) {
 		HttpServletResponse response = thread_local_response.get();
-
-		Cookie cookie = new Cookie(x_access_token, value);
-		cookie.setPath("/");
-		cookie.setMaxAge(max_age);
-		// cookie.setSecure(true);
-		// cookie.setHttpOnly(true);
-		response.addCookie(cookie);
+		if (response != null) {
+			Cookie cookie = new Cookie(x_access_token, value);
+			cookie.setPath("/");
+			cookie.setMaxAge(max_age);
+			// cookie.setSecure(true);
+			// cookie.setHttpOnly(true);
+			response.addCookie(cookie);
+		}
 	}
 
 }
