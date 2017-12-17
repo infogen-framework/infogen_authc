@@ -1,7 +1,7 @@
 package com.infogen.authc.exception.impl;
 
+import com.infogen.AUTH_CODE;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
-import com.infogen.util.AUTH_CODE;
 
 /**
  * 没有这个会话

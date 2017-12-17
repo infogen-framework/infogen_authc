@@ -37,7 +37,7 @@ import com.infogen.core.util.NativePath;
  */
 public class InfoGen_Authc {
 	private static final Logger LOGGER = LogManager.getLogger(InfoGen_Authc.class.getName());
-	public static final String X_ACCESS_TOKEN = "x-access-token";
+	public static final String X_ACCESS_TOKEN = "X-Access-Token";
 	public final static ZoneId zoneid = ZoneId.of("GMT+08:00");
 	public final static Charset charset = StandardCharsets.UTF_8;
 
