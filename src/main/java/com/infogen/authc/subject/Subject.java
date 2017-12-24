@@ -50,7 +50,7 @@ public class Subject extends JSONObject {
 			}
 			stringbuilder.append(roles[i]);
 		}
-		this.x_access_token = subject.concat(".").concat(UUID.randomUUID().toString().replaceAll("-", "")).concat(".").concat(issued_at.toString());
+		this.x_access_token = UUID.randomUUID().toString().replaceAll("-", "");
 		this.subject = subject;
 		this.guest = guest;
 		this.roles = stringbuilder.toString();
