@@ -75,7 +75,7 @@ public class InfoGen_Authc {
 		}
 	}
 
-	/////////////////////////////////Subject////////////////////////////////////////////////////
+	///////////////////////////////// Subject////////////////////////////////////////////////////
 	private static final ThreadLocal<Subject> thread_local_subject = new ThreadLocal<>();
 	public static final ThreadLocal<HttpServletRequest> thread_local_request = new ThreadLocal<>();
 	public static final ThreadLocal<HttpServletResponse> thread_local_response = new ThreadLocal<>();
@@ -83,7 +83,9 @@ public class InfoGen_Authc {
 
 	public static void create(Subject subject) {
 		thread_local_subject.set(subject);
-		if (subject.getRemember()) {
+		if (subject.getGuest()) {
+			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), Integer.MAX_VALUE);
+		} else if (subject.getRemember()) {
 			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), cookie_expire_second);
 		} else {
 			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), -1);
@@ -112,7 +114,7 @@ public class InfoGen_Authc {
 		return subject;
 	}
 
-	//////////////////////////////////TOOL////////////////////////////////////////////////////
+	////////////////////////////////// TOOL////////////////////////////////////////////////////
 	private static void set_cookie(String x_access_token, String value, Integer max_age) {
 		HttpServletResponse response = thread_local_response.get();
 		if (response != null) {

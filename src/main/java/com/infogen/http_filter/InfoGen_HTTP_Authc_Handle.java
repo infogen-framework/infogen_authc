@@ -13,6 +13,7 @@ import com.infogen.authc.InfoGen_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
+import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
 import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 import com.infogen.authc.exception.impl.Session_Expiration_Exception;
 import com.infogen.authc.exception.impl.Session_Lose_Exception;
@@ -66,8 +67,11 @@ public class InfoGen_HTTP_Authc_Handle {
 			}
 			// 需要验证的角色
 			String[] roles = operator.roles;
-
 			// 认证
+			if (x_access_token == null || x_access_token.trim().isEmpty()) {
+				throw new Authentication_Fail_Exception();
+			}
+
 			Subject subject = InfoGen_Authc.read(x_access_token);
 			if (subject == null) {
 				throw new Session_Lose_Exception();
@@ -76,8 +80,8 @@ public class InfoGen_HTTP_Authc_Handle {
 				throw new Session_Expiration_Exception();
 			} else if (subject.verifyRole(roles)) {
 				throw new Roles_Fail_Exception();
-			}else{
-				
+			} else {
+				// Authentication Success
 			}
 		} catch (InfoGen_Auth_Exception e) {
 			LOGGER.info("认证失败:".concat(requestURI), e);

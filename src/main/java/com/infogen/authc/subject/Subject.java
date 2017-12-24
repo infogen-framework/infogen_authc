@@ -18,27 +18,31 @@ import com.infogen.core.json.JSONObject;
  */
 public class Subject extends JSONObject {
 	private static final long serialVersionUID = 162572115555027765L;
-	protected String x_access_token;
-	protected String subject;
-	protected Boolean authenticated;
+	private String x_access_token;
+	private String subject;
 	/**
+	 * 是否临时用户
+	 */
+	private Boolean guest;
+	/**
+	 * 
 	 * 是否开启记住我
 	 */
-	protected Boolean remember;
+	private Boolean remember = true;
 	/**
 	 * 创建时间
 	 */
-	protected Long issued_at = Clock.system(InfoGen_Authc.zoneid).millis();
+	private Long issued_at = Clock.system(InfoGen_Authc.zoneid).millis();
 	/**
 	 * 用户具有的角色 使用,分隔 eg:admin,employee
 	 */
-	protected String roles;
+	private String roles;
 
-	public Subject(String subject, Boolean remember, String roles) {
-		this(subject, remember, roles == null ? new String[] {} : roles.split(","));
+	public Subject(String subject, Boolean guest, String roles) {
+		this(subject, guest, roles == null ? new String[] {} : roles.split(","));
 	}
 
-	public Subject(String subject, Boolean remember, String[] roles) {
+	public Subject(String subject, Boolean guest, String[] roles) {
 		StringBuilder stringbuilder = new StringBuilder();
 		for (int i = 0; i < roles.length; i++) {
 			if (i > 0) {
@@ -48,7 +52,7 @@ public class Subject extends JSONObject {
 		}
 		this.x_access_token = subject.concat(".").concat(UUID.randomUUID().toString().replaceAll("-", "")).concat(".").concat(issued_at.toString());
 		this.subject = subject;
-		this.remember = remember;
+		this.guest = guest;
 		this.roles = stringbuilder.toString();
 	}
 
@@ -69,7 +73,7 @@ public class Subject extends JSONObject {
 		}
 		return false;
 	}
-	
+
 	public Boolean verifyIssued_at() {
 		Long now_millis = Clock.system(InfoGen_Authc.zoneid).millis();
 		return now_millis - InfoGen_Authc.session_expire_millis > issued_at;
@@ -115,18 +119,12 @@ public class Subject extends JSONObject {
 		this.x_access_token = x_access_token;
 	}
 
-	/**
-	 * @return the authenticated
-	 */
-	public Boolean getAuthenticated() {
-		return authenticated;
+	public Boolean getGuest() {
+		return guest;
 	}
 
-	/**
-	 * @param authenticated the authenticated to set
-	 */
-	public void setAuthenticated(Boolean authenticated) {
-		this.authenticated = authenticated;
+	public void setGuest(Boolean guest) {
+		this.guest = guest;
 	}
 
 }
