@@ -20,6 +20,7 @@ public class Subject extends JSONObject {
 	private static final long serialVersionUID = 162572115555027765L;
 	protected String x_access_token;
 	protected String subject;
+	protected Boolean authenticated;
 	/**
 	 * 是否开启记住我
 	 */
@@ -45,8 +46,7 @@ public class Subject extends JSONObject {
 			}
 			stringbuilder.append(roles[i]);
 		}
-		String epoch_time = Long.toString(System.currentTimeMillis() / 1000);
-		this.x_access_token = subject.concat(".").concat(UUID.randomUUID().toString().replaceAll("-", "")).concat(".").concat(epoch_time);
+		this.x_access_token = subject.concat(".").concat(UUID.randomUUID().toString().replaceAll("-", "")).concat(".").concat(issued_at.toString());
 		this.subject = subject;
 		this.remember = remember;
 		this.roles = stringbuilder.toString();
@@ -68,6 +68,11 @@ public class Subject extends JSONObject {
 			}
 		}
 		return false;
+	}
+	
+	public Boolean verifyIssued_at() {
+		Long now_millis = Clock.system(InfoGen_Authc.zoneid).millis();
+		return now_millis - InfoGen_Authc.session_expire_millis > issued_at;
 	}
 
 	public String getSubject() {
@@ -108,6 +113,20 @@ public class Subject extends JSONObject {
 
 	public void setX_access_token(String x_access_token) {
 		this.x_access_token = x_access_token;
+	}
+
+	/**
+	 * @return the authenticated
+	 */
+	public Boolean getAuthenticated() {
+		return authenticated;
+	}
+
+	/**
+	 * @param authenticated the authenticated to set
+	 */
+	public void setAuthenticated(Boolean authenticated) {
+		this.authenticated = authenticated;
 	}
 
 }

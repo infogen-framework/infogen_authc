@@ -7,7 +7,6 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.time.ZoneId;
 import java.util.Collections;
@@ -38,6 +37,8 @@ import com.infogen.core.util.NativePath;
 public class InfoGen_Authc {
 	private static final Logger LOGGER = LogManager.getLogger(InfoGen_Authc.class.getName());
 	public static final String X_ACCESS_TOKEN = "X-Access-Token";
+	public final static Integer session_expire_millis = 14 * 24 * 60 * 60 * 1000;
+	public final static Integer cookie_expire_second = 7 * 24 * 60 * 60;
 	public final static ZoneId zoneid = ZoneId.of("GMT+08:00");
 	public final static Charset charset = StandardCharsets.UTF_8;
 
@@ -45,21 +46,12 @@ public class InfoGen_Authc {
 	private static final Authc_Properties_Handle properties_authc = new Authc_Properties_Handle_Authc();
 
 	public static void init(String authc_path, Subject_DAO subject_dao) throws IOException {
-		init(NativePath.get(authc_path));
-		InfoGen_Authc.subject_dao = subject_dao;
-	}
-
-	public static void init(Path authc_path, Subject_DAO subject_dao) throws IOException {
 		init(authc_path);
 		InfoGen_Authc.subject_dao = subject_dao;
 	}
 
 	public static void init(String authc_path) throws IOException {
-		init(NativePath.get(authc_path));
-	}
-
-	public static void init(Path authc_path) throws IOException {
-		try (InputStream resourceAsStream = Files.newInputStream(authc_path, StandardOpenOption.READ); //
+		try (InputStream resourceAsStream = Files.newInputStream(NativePath.get(authc_path), StandardOpenOption.READ); //
 				InputStreamReader inputstreamreader = new InputStreamReader(resourceAsStream, charset); //
 				BufferedReader reader = new BufferedReader(inputstreamreader)) {
 			Authc_Properties_Handle properties_current = null;
@@ -83,7 +75,7 @@ public class InfoGen_Authc {
 		}
 	}
 
-	private static Integer remember_timeout = 60 * 60 * 24 * 7;
+	/////////////////////////////////Subject////////////////////////////////////////////////////
 	private static final ThreadLocal<Subject> thread_local_subject = new ThreadLocal<>();
 	public static final ThreadLocal<HttpServletRequest> thread_local_request = new ThreadLocal<>();
 	public static final ThreadLocal<HttpServletResponse> thread_local_response = new ThreadLocal<>();
@@ -92,15 +84,25 @@ public class InfoGen_Authc {
 	public static void create(Subject subject) {
 		thread_local_subject.set(subject);
 		if (subject.getRemember()) {
-			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), remember_timeout);
+			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), cookie_expire_second);
 		} else {
 			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), -1);
 		}
 		subject_dao.create(subject);
 	}
 
-	public static Subject read(String subject_name) {
-		Subject subject = subject_dao.read(subject_name);
+	public static void delete(String x_access_token) {
+		thread_local_subject.remove();
+		subject_dao.delete(x_access_token);
+	}
+
+	public static void update(Subject subject) {
+		thread_local_subject.set(subject);
+		subject_dao.update(subject);
+	}
+
+	public static Subject read(String x_access_token) {
+		Subject subject = subject_dao.read(x_access_token);
 		thread_local_subject.set(subject);
 		return subject;
 	}
@@ -110,16 +112,7 @@ public class InfoGen_Authc {
 		return subject;
 	}
 
-	public static void delete(String subject_name) {
-		thread_local_subject.remove();
-		subject_dao.delete(subject_name);
-	}
-
-	public static void update(Subject subject) {
-		thread_local_subject.set(subject);
-		subject_dao.update(subject);
-	}
-
+	//////////////////////////////////TOOL////////////////////////////////////////////////////
 	private static void set_cookie(String x_access_token, String value, Integer max_age) {
 		HttpServletResponse response = thread_local_response.get();
 		if (response != null) {
@@ -127,7 +120,7 @@ public class InfoGen_Authc {
 			cookie.setPath("/");
 			cookie.setMaxAge(max_age);
 			// cookie.setSecure(true);
-			// cookie.setHttpOnly(true);
+			cookie.setHttpOnly(true);
 			response.addCookie(cookie);
 		}
 	}

@@ -13,7 +13,6 @@ import com.infogen.authc.InfoGen_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
-import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
 import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 import com.infogen.authc.exception.impl.Session_Expiration_Exception;
 import com.infogen.authc.exception.impl.Session_Lose_Exception;
@@ -69,20 +68,11 @@ public class InfoGen_HTTP_Authc_Handle {
 			String[] roles = operator.roles;
 
 			// 认证
-			if (x_access_token == null || x_access_token.trim().isEmpty()) {
-				throw new Authentication_Fail_Exception();
-			}
-
-			int indexOf = x_access_token.indexOf(".");
-			if (indexOf <= 0) {
-				throw new Session_Lose_Exception();
-			}
-			String subject_name = x_access_token.substring(0, indexOf);
-
-			Subject subject = InfoGen_Authc.read(subject_name);
+			Subject subject = InfoGen_Authc.read(x_access_token);
 			if (subject == null) {
 				throw new Session_Lose_Exception();
-			} else if (!x_access_token.equals(subject.getX_access_token())) {
+			} else if (subject.verifyIssued_at()) {
+				InfoGen_Authc.delete(x_access_token);
 				throw new Session_Expiration_Exception();
 			} else if (subject.verifyRole(roles)) {
 				throw new Roles_Fail_Exception();
