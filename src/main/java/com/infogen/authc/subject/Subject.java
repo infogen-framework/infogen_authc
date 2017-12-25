@@ -20,6 +20,7 @@ public class Subject extends JSONObject {
 	private static final long serialVersionUID = 162572115555027765L;
 	private String x_access_token;
 	private String subject;
+	private Object cache;
 	/**
 	 * 是否临时用户
 	 */
@@ -125,6 +126,21 @@ public class Subject extends JSONObject {
 
 	public void setGuest(Boolean guest) {
 		this.guest = guest;
+	}
+
+	/**
+	 * @return the cache
+	 */
+	public Object getCache() {
+		return cache;
+	}
+
+	/**
+	 * @param cache
+	 *            the cache to set
+	 */
+	public void setCache(Object cache) {
+		this.cache = cache;
 	}
 
 }
