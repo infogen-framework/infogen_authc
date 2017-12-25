@@ -72,11 +72,11 @@ public class InfoGen_HTTP_Authc_Handle {
 				throw new Authentication_Fail_Exception();
 			}
 
-			Subject subject = InfoGen_Session.read(x_access_token);
+			Subject subject = InfoGen_Session.read_subject(x_access_token);
 			if (subject == null) {
 				throw new Session_Lose_Exception();
 			} else if (subject.verifyIssued_at()) {
-				InfoGen_Session.delete(x_access_token);
+				InfoGen_Session.delete_subject(x_access_token);
 				throw new Session_Expiration_Exception();
 			} else if (subject.verifyRole(roles)) {
 				throw new Roles_Fail_Exception();
