@@ -126,5 +126,4 @@ public class InfoGen_Session {
 			response.addCookie(cookie);
 		}
 	}
-
 }
