@@ -71,7 +71,7 @@ public class InfoGen_Session {
 				}
 			}
 			Collections.reverse(Authc_Properties_Handle_Authc.urls_rules);
-			LOGGER.info("初始化 InfoGen_Authc 成功");
+			LOGGER.info("初始化 InfoGen_Session 成功");
 		}
 	}
 
