@@ -45,12 +45,12 @@ public class InfoGen_Session {
 	private static final Authc_Properties_Handle properties_main = new Authc_Properties_Handle_Main();
 	private static final Authc_Properties_Handle properties_authc = new Authc_Properties_Handle_Authc();
 
-	public static void init(String authc_path, Subject_DAO subject_dao) throws IOException {
-		init(authc_path);
+	public static void init_authc(String authc_path, Subject_DAO subject_dao) throws IOException {
+		init_authc(authc_path);
 		InfoGen_Session.subject_dao = subject_dao;
 	}
 
-	public static void init(String authc_path) throws IOException {
+	public static void init_authc(String authc_path) throws IOException {
 		try (InputStream resourceAsStream = Files.newInputStream(NativePath.get(authc_path), StandardOpenOption.READ); //
 				InputStreamReader inputstreamreader = new InputStreamReader(resourceAsStream, charset); //
 				BufferedReader reader = new BufferedReader(inputstreamreader)) {
