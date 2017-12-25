@@ -9,7 +9,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.infogen.authc.InfoGen_Authc;
+import com.infogen.authc.InfoGen_Session;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
@@ -72,11 +72,11 @@ public class InfoGen_HTTP_Authc_Handle {
 				throw new Authentication_Fail_Exception();
 			}
 
-			Subject subject = InfoGen_Authc.read(x_access_token);
+			Subject subject = InfoGen_Session.read(x_access_token);
 			if (subject == null) {
 				throw new Session_Lose_Exception();
 			} else if (subject.verifyIssued_at()) {
-				InfoGen_Authc.delete(x_access_token);
+				InfoGen_Session.delete(x_access_token);
 				throw new Session_Expiration_Exception();
 			} else if (subject.verifyRole(roles)) {
 				throw new Roles_Fail_Exception();

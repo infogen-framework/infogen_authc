@@ -34,8 +34,8 @@ import com.infogen.core.util.NativePath;
  * @since 1.0
  * @version 1.0
  */
-public class InfoGen_Authc {
-	private static final Logger LOGGER = LogManager.getLogger(InfoGen_Authc.class.getName());
+public class InfoGen_Session {
+	private static final Logger LOGGER = LogManager.getLogger(InfoGen_Session.class.getName());
 	public static final String X_ACCESS_TOKEN = "X-Access-Token";
 	public final static Integer session_expire_millis = 14 * 24 * 60 * 60 * 1000;
 	public final static Integer cookie_expire_second = 7 * 24 * 60 * 60;
@@ -47,7 +47,7 @@ public class InfoGen_Authc {
 
 	public static void init(String authc_path, Subject_DAO subject_dao) throws IOException {
 		init(authc_path);
-		InfoGen_Authc.subject_dao = subject_dao;
+		InfoGen_Session.subject_dao = subject_dao;
 	}
 
 	public static void init(String authc_path) throws IOException {

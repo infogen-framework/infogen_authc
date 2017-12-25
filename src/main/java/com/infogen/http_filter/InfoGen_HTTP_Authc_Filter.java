@@ -13,7 +13,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.infogen.authc.InfoGen_Authc;
+import com.infogen.authc.InfoGen_Session;
 
 /**
  * HTTP方式的安全验证框架的过滤器
@@ -29,15 +29,15 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 	public void doFilter(ServletRequest srequset, ServletResponse sresponse, FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) srequset;
 		HttpServletResponse response = (HttpServletResponse) sresponse;
-		InfoGen_Authc.thread_local_request.set(request);
-		InfoGen_Authc.thread_local_response.set(response);
+		InfoGen_Session.thread_local_request.set(request);
+		InfoGen_Session.thread_local_response.set(response);
 		// 验证权限
 		String requestURI = request.getRequestURI();
 		String contextPath = request.getContextPath();
 		if (requestURI.startsWith(contextPath)) {
 			requestURI = requestURI.substring(contextPath.length());
 		}
-		String x_access_token = getCookieByName(request, InfoGen_Authc.X_ACCESS_TOKEN);
+		String x_access_token = getCookieByName(request, InfoGen_Session.X_ACCESS_TOKEN);
 		if (!authc.doFilter(requestURI, x_access_token, response)) {
 			return;
 		}

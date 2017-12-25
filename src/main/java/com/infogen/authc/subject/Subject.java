@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
-import com.infogen.authc.InfoGen_Authc;
+import com.infogen.authc.InfoGen_Session;
 import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 import com.infogen.core.json.JSONObject;
 
@@ -21,6 +21,7 @@ public class Subject extends JSONObject {
 	private String x_access_token;
 	private String subject;
 	private Object cache;
+
 	/**
 	 * 是否临时用户
 	 */
@@ -33,7 +34,7 @@ public class Subject extends JSONObject {
 	/**
 	 * 创建时间
 	 */
-	private Long issued_at = Clock.system(InfoGen_Authc.zoneid).millis();
+	private Long issued_at = Clock.system(InfoGen_Session.zoneid).millis();
 	/**
 	 * 用户具有的角色 使用,分隔 eg:admin,employee
 	 */
@@ -76,8 +77,8 @@ public class Subject extends JSONObject {
 	}
 
 	public Boolean verifyIssued_at() {
-		Long now_millis = Clock.system(InfoGen_Authc.zoneid).millis();
-		return now_millis - InfoGen_Authc.session_expire_millis > issued_at;
+		Long now_millis = Clock.system(InfoGen_Session.zoneid).millis();
+		return now_millis - InfoGen_Session.session_expire_millis > issued_at;
 	}
 
 	public String getSubject() {
