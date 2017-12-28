@@ -9,7 +9,6 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,23 +36,11 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 		if (requestURI.startsWith(contextPath)) {
 			requestURI = requestURI.substring(contextPath.length());
 		}
-		String x_access_token = getCookieByName(request, InfoGen_Session.X_ACCESS_TOKEN);
-		if (!authc.doFilter(requestURI, x_access_token, response)) {
+		
+		if (!authc.doFilter(requestURI,request, response)) {
 			return;
 		}
 		filterChain.doFilter(request, response);
-	}
-
-	public String getCookieByName(HttpServletRequest request, String name) {
-		Cookie[] cookies = request.getCookies();
-		if (null != cookies) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals(name)) {
-					return cookie.getValue();
-				}
-			}
-		}
-		return null;
 	}
 
 	/*

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.logging.log4j.LogManager;
@@ -47,7 +49,7 @@ public class InfoGen_HTTP_Authc_Handle {
 	// js 前端页面加载时判断是否有 x-access-token 没有跳转到登录页面
 	// ajax 调用后判断如果为没有权限执行登录操作
 	// 只有存在 x-access-token 并通过有效期验证的才生成用于验证权限的subject
-	public Boolean doFilter(String requestURI, String x_access_token, HttpServletResponse response) throws IOException, ServletException {
+	public Boolean doFilter(String requestURI, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		// request.getRealPath("/")); F:\Tomcat 6.0\webapps\news\test
 		// System.out.println(request.getRequestURL()); //
 		// http://localhost:8080/news/main/list.jsp
@@ -68,10 +70,13 @@ public class InfoGen_HTTP_Authc_Handle {
 			// 需要验证的角色
 			String[] roles = operator.roles;
 			// 认证
+			String x_access_token = getCookieByName(request, InfoGen_Session.X_ACCESS_TOKEN);
+			if (x_access_token == null || x_access_token.trim().isEmpty()) {
+				x_access_token = request.getHeader(InfoGen_Session.X_ACCESS_TOKEN);
+			}
 			if (x_access_token == null || x_access_token.trim().isEmpty()) {
 				throw new Authentication_Fail_Exception();
 			}
-
 			Subject subject = InfoGen_Session.read_subject(x_access_token);
 			if (subject == null) {
 				throw new Session_Lose_Exception();
@@ -93,5 +98,17 @@ public class InfoGen_HTTP_Authc_Handle {
 			return false;
 		}
 		return true;
+	}
+
+	public String getCookieByName(HttpServletRequest request, String name) {
+		Cookie[] cookies = request.getCookies();
+		if (null != cookies) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals(name)) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
 	}
 }
