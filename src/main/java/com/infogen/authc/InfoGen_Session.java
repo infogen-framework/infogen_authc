@@ -107,7 +107,7 @@ public class InfoGen_Session {
 		subject_dao.update(subject);
 	}
 
-	public static Subject get(String x_access_token) {
+	public static Subject load(String x_access_token) {
 		Subject subject = subject_dao.get(x_access_token);
 		thread_local_subject.set(subject);
 		return subject;

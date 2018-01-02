@@ -46,7 +46,8 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 		Subject subject = null;
 		if (x_access_token == null || x_access_token.trim().isEmpty()) {
 		} else {
-			subject = InfoGen_Session.get(x_access_token);
+			// load 后缓存在本地一份
+			subject = InfoGen_Session.load(x_access_token);
 		}
 		if (!authc.doFilter(subject, requestURI, request, response)) {
 			return;
@@ -54,6 +55,7 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 		try {
 			filterChain.doFilter(request, response);
 		} finally {
+			// 执行完后清除本地缓存的 subject
 			InfoGen_Session.delete_local();
 		}
 	}
