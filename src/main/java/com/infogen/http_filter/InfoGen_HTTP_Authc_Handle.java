@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -18,7 +17,6 @@ import com.infogen.authc.exception.InfoGen_Auth_Exception;
 import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
 import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 import com.infogen.authc.exception.impl.Session_Expiration_Exception;
-import com.infogen.authc.exception.impl.Session_Lose_Exception;
 import com.infogen.authc.resource.Resource;
 import com.infogen.authc.subject.Subject;
 import com.infogen.core.json.Return;
@@ -49,7 +47,7 @@ public class InfoGen_HTTP_Authc_Handle {
 	// js 前端页面加载时判断是否有 x-access-token 没有跳转到登录页面
 	// ajax 调用后判断如果为没有权限执行登录操作
 	// 只有存在 x-access-token 并通过有效期验证的才生成用于验证权限的subject
-	public Boolean doFilter(String requestURI, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+	public Boolean doFilter(Subject subject, String requestURI, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 		// request.getRealPath("/")); F:\Tomcat 6.0\webapps\news\test
 		// System.out.println(request.getRequestURL()); //
 		// http://localhost:8080/news/main/list.jsp
@@ -61,27 +59,16 @@ public class InfoGen_HTTP_Authc_Handle {
 		Resource operator = has(requestURI);
 		try {
 			// 该方法不需要任何角色验证直接返回认证成功
-			if (operator == null) {
-				return true;
-			}
-			if (operator.anon()) {
+			if (operator == null || operator.anon()) {
 				return true;
 			}
 			// 需要验证的角色
 			String[] roles = operator.roles;
 			// 认证
-			String x_access_token = getCookieByName(request, InfoGen_Session.X_ACCESS_TOKEN);
-			if (x_access_token == null || x_access_token.trim().isEmpty()) {
-				x_access_token = request.getHeader(InfoGen_Session.X_ACCESS_TOKEN);
-			}
-			if (x_access_token == null || x_access_token.trim().isEmpty()) {
-				throw new Authentication_Fail_Exception();
-			}
-			Subject subject = InfoGen_Session.read_subject(x_access_token);
 			if (subject == null) {
-				throw new Session_Lose_Exception();
+				throw new Authentication_Fail_Exception();
 			} else if (subject.verifyIssued_at()) {
-				InfoGen_Session.delete_subject(x_access_token);
+				InfoGen_Session.delete(subject.getX_access_token());
 				throw new Session_Expiration_Exception();
 			} else if (subject.verifyRole(roles)) {
 				throw new Roles_Fail_Exception();
@@ -100,15 +87,4 @@ public class InfoGen_HTTP_Authc_Handle {
 		return true;
 	}
 
-	public String getCookieByName(HttpServletRequest request, String name) {
-		Cookie[] cookies = request.getCookies();
-		if (null != cookies) {
-			for (Cookie cookie : cookies) {
-				if (cookie.getName().equals(name)) {
-					return cookie.getValue();
-				}
-			}
-		}
-		return null;
-	}
 }

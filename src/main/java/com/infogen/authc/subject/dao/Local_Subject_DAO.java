@@ -29,7 +29,7 @@ public class Local_Subject_DAO extends Subject_DAO {
 	 * @see com.infogen.authc.subject.dao.Subject_DAO#create(com.infogen.authc.subject.Subject)
 	 */
 	@Override
-	public void create(Subject subject) {
+	public void save(Subject subject) {
 		map.put(subject.getX_access_token(), subject);
 	}
 
@@ -39,7 +39,7 @@ public class Local_Subject_DAO extends Subject_DAO {
 	 * @see com.infogen.authc.subject.dao.Subject_DAO#read(java.lang.String)
 	 */
 	@Override
-	public Subject read(String x_access_toke) {
+	public Subject get(String x_access_toke) {
 		return map.get(x_access_toke);
 	}
 

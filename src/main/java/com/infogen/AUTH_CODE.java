@@ -9,9 +9,8 @@ package com.infogen;
  */
 public enum AUTH_CODE {
 	authentication_fail(1000, "认证失败"), // 没有 Token
-	session_lose(1001, "Session 丢失"), // Token 不存在
-	session_expiration(1002, "Session 过期"), //
-	roles_fail(1003, "授权失败"); // T
+	session_expiration(1001, "Session 过期"), //
+	roles_fail(1002, "授权失败"); // T
 	public String note;
 	public Integer code;
 

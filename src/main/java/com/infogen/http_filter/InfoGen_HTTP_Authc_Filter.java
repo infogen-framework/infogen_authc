@@ -9,10 +9,12 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.infogen.authc.InfoGen_Session;
+import com.infogen.authc.subject.Subject;
 
 /**
  * HTTP方式的安全验证框架的过滤器
@@ -36,11 +38,36 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 		if (requestURI.startsWith(contextPath)) {
 			requestURI = requestURI.substring(contextPath.length());
 		}
-		
-		if (!authc.doFilter(requestURI,request, response)) {
+		//
+		String x_access_token = getCookieByName(request, InfoGen_Session.X_ACCESS_TOKEN);
+		if (x_access_token == null || x_access_token.trim().isEmpty()) {
+			x_access_token = request.getHeader(InfoGen_Session.X_ACCESS_TOKEN);
+		}
+		Subject subject = null;
+		if (x_access_token == null || x_access_token.trim().isEmpty()) {
+		} else {
+			subject = InfoGen_Session.get(x_access_token);
+		}
+		if (!authc.doFilter(subject, requestURI, request, response)) {
 			return;
 		}
-		filterChain.doFilter(request, response);
+		try {
+			filterChain.doFilter(request, response);
+		} finally {
+			InfoGen_Session.delete_local();
+		}
+	}
+
+	public String getCookieByName(HttpServletRequest request, String name) {
+		Cookie[] cookies = request.getCookies();
+		if (null != cookies) {
+			for (Cookie cookie : cookies) {
+				if (cookie.getName().equals(name)) {
+					return cookie.getValue();
+				}
+			}
+		}
+		return null;
 	}
 
 	/*

@@ -81,7 +81,7 @@ public class InfoGen_Session {
 	public static final ThreadLocal<HttpServletResponse> thread_local_response = new ThreadLocal<>();
 	private static Subject_DAO subject_dao = new Local_Subject_DAO();
 
-	public static void create_subject(Subject subject) {
+	public static void save(Subject subject) {
 		thread_local_subject.set(subject);
 		if (subject.getGuest()) {
 			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), Integer.MAX_VALUE);
@@ -90,26 +90,30 @@ public class InfoGen_Session {
 		} else {
 			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), -1);
 		}
-		subject_dao.create(subject);
+		subject_dao.save(subject);
 	}
 
-	public static void delete_subject(String x_access_token) {
+	public static void delete(String x_access_token) {
 		thread_local_subject.remove();
 		subject_dao.delete(x_access_token);
 	}
 
-	public static void update_subject(Subject subject) {
+	public static void delete_local() {
+		thread_local_subject.remove();
+	}
+
+	public static void update(Subject subject) {
 		thread_local_subject.set(subject);
 		subject_dao.update(subject);
 	}
 
-	public static Subject read_subject(String x_access_token) {
-		Subject subject = subject_dao.read(x_access_token);
+	public static Subject get(String x_access_token) {
+		Subject subject = subject_dao.get(x_access_token);
 		thread_local_subject.set(subject);
 		return subject;
 	}
 
-	public static Subject read_subject() {
+	public static Subject get() {
 		Subject subject = thread_local_subject.get();
 		return subject;
 	}

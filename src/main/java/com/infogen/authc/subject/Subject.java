@@ -1,5 +1,6 @@
 package com.infogen.authc.subject;
 
+import java.io.Serializable;
 import java.time.Clock;
 import java.util.Arrays;
 import java.util.List;
@@ -7,16 +8,15 @@ import java.util.UUID;
 
 import com.infogen.authc.InfoGen_Session;
 import com.infogen.authc.exception.impl.Roles_Fail_Exception;
-import com.infogen.core.json.JSONObject;
 
 /**
- * 一个安全认证实例
+ * 安全认证实例
  * 
  * @author larry/larrylv@outlook.com/创建时间 2015年5月13日 下午3:14:24
  * @since 1.0
  * @version 1.0
  */
-public class Subject extends JSONObject {
+public class Subject implements Serializable {
 	private static final long serialVersionUID = 162572115555027765L;
 	private String x_access_token;
 	private String subject;
