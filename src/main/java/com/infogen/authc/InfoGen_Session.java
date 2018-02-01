@@ -38,7 +38,7 @@ public class InfoGen_Session {
 	private static final Logger LOGGER = LogManager.getLogger(InfoGen_Session.class.getName());
 	public static final String X_ACCESS_TOKEN = "X-Access-Token";
 	public final static Integer session_expire_millis = 14 * 24 * 60 * 60 * 1000;
-	public final static Integer cookie_expire_second = 7 * 24 * 60 * 60;
+	public final static Integer cookie_expire_second = 30 * 24 * 60 * 60;
 	public final static ZoneId zoneid = ZoneId.of("GMT+08:00");
 	public final static Charset charset = StandardCharsets.UTF_8;
 
