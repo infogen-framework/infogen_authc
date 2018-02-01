@@ -24,8 +24,8 @@ import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
 import com.infogen.authc.subject.Subject;
 import com.infogen.authc.subject.dao.Local_Subject_DAO;
 import com.infogen.authc.subject.dao.Subject_DAO;
+import com.infogen.core.path.NativePath;
 import com.infogen.core.tools.Tool_String;
-import com.infogen.core.util.NativePath;
 
 /**
  * API认证框架的session本地缓存工具类,可以保存和获取subject
