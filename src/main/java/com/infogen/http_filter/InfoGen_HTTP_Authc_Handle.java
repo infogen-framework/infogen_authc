@@ -80,7 +80,7 @@ public class InfoGen_HTTP_Authc_Handle {
 			if (operator.isRedirect()) {
 				response.sendRedirect(signin.concat("?code=" + e.code()));
 			} else {
-				response.getWriter().write(Return.create(e.code(), e.note()).toJson(""));
+				response.getWriter().write(Return.create(e.code(), e.note()).toJson("{}"));
 			}
 			return false;
 		}

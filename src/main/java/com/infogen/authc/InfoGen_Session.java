@@ -85,7 +85,7 @@ public class InfoGen_Session {
 		thread_local_subject.set(subject);
 		if (subject.getGuest()) {
 			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), Integer.MAX_VALUE);
-		} else if (subject.getRemember()) {
+		} else if (subject.getRemember_me()) {
 			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), cookie_expire_second);
 		} else {
 			set_cookie(X_ACCESS_TOKEN, subject.getX_access_token(), -1);

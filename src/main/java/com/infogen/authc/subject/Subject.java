@@ -20,13 +20,12 @@ public class Subject implements Serializable {
 	private static final long serialVersionUID = 162572115555027765L;
 	private String x_access_token;
 	private String subject;
-	private Object cache;
 	private Boolean guest;// 是否临时用户
 	private String roles;// 用户具有的角色 使用,分隔 eg:admin,employee
-	/**
-	 * 创建时间
-	 */
+	private Boolean remember_me = true;
 	private Long issued_at = Clock.system(InfoGen_Session.zoneid).millis();
+
+	private Object cache;
 
 	public Subject(String subject, Boolean guest, String roles) {
 		this(subject, guest, roles == null ? new String[] {} : roles.split(","));
@@ -115,6 +114,14 @@ public class Subject implements Serializable {
 
 	public void setCache(Object cache) {
 		this.cache = cache;
+	}
+
+	public Boolean getRemember_me() {
+		return remember_me;
+	}
+
+	public void setRemember_me(Boolean remember_me) {
+		this.remember_me = remember_me;
 	}
 
 }
