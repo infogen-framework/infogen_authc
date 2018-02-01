@@ -19,7 +19,7 @@ import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 import com.infogen.authc.exception.impl.Session_Expiration_Exception;
 import com.infogen.authc.resource.Resource;
 import com.infogen.authc.subject.Subject;
-import com.infogen.core.json.Return;
+import com.infogen.core.json.JSONObject;
 
 /**
  * HTTP接口的API认证的处理器,可以通过ini配置注入使用的session管理器
@@ -80,7 +80,7 @@ public class InfoGen_HTTP_Authc_Handle {
 			if (operator.isRedirect()) {
 				response.sendRedirect(signin.concat("?code=" + e.code()));
 			} else {
-				response.getWriter().write(Return.create(e.code(), e.note()).toJson("{}"));
+				response.getWriter().write(JSONObject.create(e.code().toString(), e.note()).toJson("{}"));
 			}
 			return false;
 		}
