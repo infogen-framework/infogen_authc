@@ -21,24 +21,12 @@ public class Subject implements Serializable {
 	private String x_access_token;
 	private String subject;
 	private Object cache;
-
-	/**
-	 * 是否临时用户
-	 */
-	private Boolean guest;
-	/**
-	 * 
-	 * 是否开启记住我
-	 */
-	private Boolean remember = true;
+	private Boolean guest;// 是否临时用户
+	private String roles;// 用户具有的角色 使用,分隔 eg:admin,employee
 	/**
 	 * 创建时间
 	 */
 	private Long issued_at = Clock.system(InfoGen_Session.zoneid).millis();
-	/**
-	 * 用户具有的角色 使用,分隔 eg:admin,employee
-	 */
-	private String roles;
 
 	public Subject(String subject, Boolean guest, String roles) {
 		this(subject, guest, roles == null ? new String[] {} : roles.split(","));
@@ -89,14 +77,6 @@ public class Subject implements Serializable {
 		this.subject = subject;
 	}
 
-	public Boolean getRemember() {
-		return remember;
-	}
-
-	public void setRemember(Boolean remember) {
-		this.remember = remember;
-	}
-
 	public Long getIssued_at() {
 		return issued_at;
 	}
@@ -129,17 +109,10 @@ public class Subject implements Serializable {
 		this.guest = guest;
 	}
 
-	/**
-	 * @return the cache
-	 */
 	public Object getCache() {
 		return cache;
 	}
 
-	/**
-	 * @param cache
-	 *            the cache to set
-	 */
 	public void setCache(Object cache) {
 		this.cache = cache;
 	}
