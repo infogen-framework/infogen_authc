@@ -47,7 +47,7 @@
 		<!-- aop -->
 		<dependency>
 			<groupId>com.github.infogen7</groupId>
-			<artifactId>infogen_soa</artifactId>
+			<artifactId>infogen_core</artifactId>
 			<version>${project.version}</version>
 		</dependency>
 
