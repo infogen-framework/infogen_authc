@@ -1,4 +1,4 @@
-package com.infogen.http.ServletContainerInitializer;
+package com.infogen.http.ServletContainerInitializer.infogen_authc;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;

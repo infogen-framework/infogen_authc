@@ -1,4 +1,4 @@
-package com.infogen.http.ServletContainerInitializer;
+package com.infogen.http.ServletContainerInitializer.infogen_authc;
 
 import java.lang.reflect.Modifier;
 import java.util.Set;

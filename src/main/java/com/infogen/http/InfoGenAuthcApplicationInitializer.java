@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.infogen.http.ServletContainerInitializer.WebApplicationInitializer;
+import com.infogen.http.ServletContainerInitializer.infogen_authc.WebApplicationInitializer;
 
 /**
  * 用于启动mvc框架的监听器
@@ -16,8 +16,8 @@ import com.infogen.http.ServletContainerInitializer.WebApplicationInitializer;
  * @since 1.0
  * @version 1.0
  */
-public class InfoGenApplicationInitializer implements WebApplicationInitializer {
-	private static final Logger LOGGER = LogManager.getLogger(InfoGenApplicationInitializer.class.getName());
+public class InfoGenAuthcApplicationInitializer implements WebApplicationInitializer {
+	private static final Logger LOGGER = LogManager.getLogger(InfoGenAuthcApplicationInitializer.class.getName());
 
 	/*
 	 * (non-Javadoc)

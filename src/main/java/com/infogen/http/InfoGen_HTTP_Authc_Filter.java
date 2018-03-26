@@ -22,7 +22,8 @@ import com.infogen.authc.subject.Subject;
  * @since 1.0
  * @version 1.0
  */
-//@WebFilter(filterName = "InfoGen_HTTP_Authc_Filter", urlPatterns = { "/*" }, asyncSupported = true)
+// 注解不支持排序 所以在 WebApplicationInitializer 中加载
+// @WebFilter(filterName = "InfoGen_HTTP_Authc_Filter", urlPatterns = { "/*" }, asyncSupported = true)
 public class InfoGen_HTTP_Authc_Filter implements Filter {
 	private InfoGen_HTTP_Authc_Handle authc = new InfoGen_HTTP_Authc_Handle();
 
@@ -49,7 +50,7 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 			subject = InfoGen_Session.load(x_access_token);
 		}
 		if (!authc.doFilter(subject, requestURI, request, response)) {
-//			return;
+			// return;
 		}
 		try {
 			filterChain.doFilter(request, response);
