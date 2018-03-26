@@ -1,4 +1,4 @@
-package com.infogen.http_filter;
+package com.infogen.http;
 
 import java.io.IOException;
 
@@ -8,7 +8,6 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
-import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -23,7 +22,7 @@ import com.infogen.authc.subject.Subject;
  * @since 1.0
  * @version 1.0
  */
-@WebFilter(filterName = "InfoGen_HTTP_Authc_Filter", urlPatterns = { "/*" }, asyncSupported = true)
+//@WebFilter(filterName = "InfoGen_HTTP_Authc_Filter", urlPatterns = { "/*" }, asyncSupported = true)
 public class InfoGen_HTTP_Authc_Filter implements Filter {
 	private InfoGen_HTTP_Authc_Handle authc = new InfoGen_HTTP_Authc_Handle();
 
@@ -50,7 +49,7 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 			subject = InfoGen_Session.load(x_access_token);
 		}
 		if (!authc.doFilter(subject, requestURI, request, response)) {
-			return;
+//			return;
 		}
 		try {
 			filterChain.doFilter(request, response);

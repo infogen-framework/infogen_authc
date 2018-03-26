@@ -1,4 +1,4 @@
-package com.infogen.http_filter;
+package com.infogen.http;
 
 import java.io.IOException;
 import java.util.List;
