@@ -50,7 +50,7 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 			subject = InfoGen_Session.load(x_access_token);
 		}
 		if (!authc.doFilter(subject, requestURI, request, response)) {
-			// return;
+			return;
 		}
 		try {
 			filterChain.doFilter(request, response);
