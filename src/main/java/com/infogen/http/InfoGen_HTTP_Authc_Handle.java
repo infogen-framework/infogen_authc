@@ -76,7 +76,7 @@ public class InfoGen_HTTP_Authc_Handle {
 				// Authentication Success
 			}
 		} catch (InfoGen_Auth_Exception e) {
-			LOGGER.info("认证失败:".concat(requestURI), e);
+			LOGGER.info("认证失败:".concat(requestURI));
 			if (operator.isRedirect()) {
 				response.sendRedirect(signin.concat("?code=" + e.code()));
 			} else {
