@@ -1,5 +1,6 @@
 package com.infogen.http;
 
+import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
@@ -26,8 +27,8 @@ public class InfoGenAuthcApplicationInitializer implements WebApplicationInitial
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		LOGGER.info("initialized for Application - JAR AUTHC");
-		// FilterRegistration.Dynamic filter = servletContext.addFilter("InfoGen_HTTP_Authc_Filter", InfoGen_HTTP_Authc_Filter.class);
-		// filter.addMappingForUrlPatterns(null, true, "/*");
-		// filter.setAsyncSupported(true);
+		FilterRegistration.Dynamic filter = servletContext.addFilter("InfoGen_HTTP_Authc_Filter", InfoGen_HTTP_Authc_Filter.class);
+		filter.addMappingForUrlPatterns(null, true, "/*");
+		filter.setAsyncSupported(true);
 	}
 }
