@@ -29,8 +29,16 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 	public void doFilter(ServletRequest srequset, ServletResponse sresponse, FilterChain filterChain) throws IOException, ServletException {
 		HttpServletRequest request = (HttpServletRequest) srequset;
 		HttpServletResponse response = (HttpServletResponse) sresponse;
+		// 是否是 Servlet 的跨域保护 preflighted request。
+		// preflighted request在发送真正的请求前, 会先发送一个方法为OPTIONS的预请求(preflight request), 用于试探服务端是否能接受真正的请求，如果options获得的回应是拒绝性质的，比如404\403\500等http状态，就会停止post、put等请求的发出
+		if (request.getMethod().equals("OPTIONS")) {
+			filterChain.doFilter(request, response);
+			return;
+		}
+
 		InfoGen_Session.thread_local_request.set(request);
 		InfoGen_Session.thread_local_response.set(response);
+
 		// 验证权限
 		String requestURI = request.getRequestURI();
 		String contextPath = request.getContextPath();
@@ -45,17 +53,14 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 		Subject subject = null;
 		if (x_access_token == null || x_access_token.trim().isEmpty()) {
 		} else {
-			// load 后缓存在本地一份
-			subject = InfoGen_Session.load(x_access_token);
+			subject = InfoGen_Session.load(x_access_token);// load 后缓存在本地一份
 		}
-		if (!authc.doFilter(subject, requestURI, request, response)) {
-			return;
-		}
-		try {
-			filterChain.doFilter(request, response);
-		} finally {
-			// 执行完后清除本地缓存的 subject
-			InfoGen_Session.delete_local();
+		if (authc.doFilter(subject, requestURI, request, response)) {
+			try {
+				filterChain.doFilter(request, response);
+			} finally {
+				InfoGen_Session.delete_local();// 执行完后清除本地缓存的 subject
+			}
 		}
 	}
 
