@@ -23,7 +23,6 @@ import com.infogen.authc.subject.Subject;
  * @version 1.0
  */
 // 注解不支持排序 所以在 WebApplicationInitializer 中加载
-// @WebFilter(filterName = "InfoGen_HTTP_Authc_Filter", urlPatterns = { "/*" }, asyncSupported = true)
 public class InfoGen_HTTP_Authc_Filter implements Filter {
 	private InfoGen_HTTP_Authc_Handle authc = new InfoGen_HTTP_Authc_Handle();
 
