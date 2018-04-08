@@ -1,13 +1,12 @@
 package com.infogen.http;
 
-import javax.servlet.FilterRegistration;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.infogen.http.ServletContainerInitializer.infogen_authc.WebApplicationInitializer;
+import com.infogen.http.ServletContainerInitializer.WebApplicationInitializer;
 
 /**
  * 用于启动mvc框架的监听器
@@ -27,8 +26,8 @@ public class InfoGenAuthcApplicationInitializer implements WebApplicationInitial
 	@Override
 	public void onStartup(ServletContext servletContext) throws ServletException {
 		LOGGER.info("initialized for Application - JAR AUTHC");
-		FilterRegistration.Dynamic filter = servletContext.addFilter("InfoGen_HTTP_Authc_Filter", InfoGen_HTTP_Authc_Filter.class);
-		filter.addMappingForUrlPatterns(null, true, "/*");
-		filter.setAsyncSupported(true);
+		// FilterRegistration.Dynamic filter = servletContext.addFilter("InfoGen_HTTP_Authc_Filter", InfoGen_HTTP_Authc_Filter.class);
+		// filter.addMappingForUrlPatterns(null, true, "/*");
+		// filter.setAsyncSupported(true);
 	}
 }
