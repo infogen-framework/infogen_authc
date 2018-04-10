@@ -44,6 +44,20 @@ public class InfoGen_HTTP_Authc_Handle {
 		return null;
 	}
 
+	public String get_ip(HttpServletRequest request) {
+		String ip = request.getHeader("x-forwarded-for");
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+		}
+		return ip;
+	}
+
 	// js 前端页面加载时判断是否有 x-access-token 没有跳转到登录页面
 	// ajax 调用后判断如果为没有权限执行登录操作
 	// 只有存在 x-access-token 并通过有效期验证的才生成用于验证权限的subject
@@ -76,7 +90,7 @@ public class InfoGen_HTTP_Authc_Handle {
 				// Authentication Success
 			}
 		} catch (InfoGen_Auth_Exception e) {
-			LOGGER.info("认证失败:".concat(requestURI));
+			LOGGER.info("认证失败:".concat(requestURI) + " from " + get_ip(request));
 			if (operator.isRedirect()) {
 				response.sendRedirect(signin.concat("?code=" + e.code()));
 			} else {
