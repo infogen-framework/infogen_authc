@@ -16,5 +16,5 @@ public abstract class InfoGen_Auth_Exception extends IOException {
 
 	public abstract String name();
 
-	public abstract String note();
+	public abstract String message();
 }

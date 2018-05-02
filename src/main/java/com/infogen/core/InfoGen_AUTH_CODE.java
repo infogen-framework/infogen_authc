@@ -1,4 +1,4 @@
-package com.infogen;
+package com.infogen.core;
 
 /**
  * infogen框架的返回值错误码
@@ -7,15 +7,15 @@ package com.infogen;
  * @since 1.0
  * @version 1.0
  */
-public enum AUTH_CODE {
+public enum InfoGen_AUTH_CODE {
 	authentication_fail(1000, "认证失败"), // 没有 Token
 	session_expiration(1001, "Session 过期"), //
 	roles_fail(1002, "授权失败"); // T
-	public String note;
 	public Integer code;
+	public String message;
 
-	private AUTH_CODE(Integer code, String note) {
-		this.note = note;
+	private InfoGen_AUTH_CODE(Integer code, String message) {
 		this.code = code;
+		this.message = message;
 	}
 }

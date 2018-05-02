@@ -1,7 +1,7 @@
 package com.infogen.authc.exception.impl;
 
-import com.infogen.AUTH_CODE;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
+import com.infogen.core.InfoGen_AUTH_CODE;
 
 /**
  * 角色授权失败的错误
@@ -21,7 +21,7 @@ public class Roles_Fail_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public Integer code() {
 		// TODO Auto-generated method stub
-		return AUTH_CODE.roles_fail.code;
+		return InfoGen_AUTH_CODE.roles_fail.code;
 	}
 
 	/*
@@ -32,7 +32,7 @@ public class Roles_Fail_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public String name() {
 		// TODO Auto-generated method stub
-		return AUTH_CODE.roles_fail.name();
+		return InfoGen_AUTH_CODE.roles_fail.name();
 	}
 
 	/*
@@ -41,9 +41,9 @@ public class Roles_Fail_Exception extends InfoGen_Auth_Exception {
 	 * @see com.infogen.authc.exception.InfoGen_Auth_Exception#note()
 	 */
 	@Override
-	public String note() {
+	public String message() {
 		// TODO Auto-generated method stub
-		return AUTH_CODE.roles_fail.note;
+		return InfoGen_AUTH_CODE.roles_fail.message;
 	}
 
 }

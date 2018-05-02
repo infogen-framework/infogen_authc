@@ -94,7 +94,7 @@ public class InfoGen_HTTP_Authc_Handle {
 			if (operator.isRedirect()) {
 				response.sendRedirect(signin.concat("?code=" + e.code()));
 			} else {
-				response.getWriter().write(JSONObject.create("code", e.code().toString()).put("note", e.note()).toJson("{}"));
+				response.getWriter().write(JSONObject.create("code", e.code().toString()).put("message", e.message()).toJson("{}"));
 			}
 			return false;
 		}

@@ -1,10 +1,11 @@
 package com.infogen.authc.exception.impl;
 
-import com.infogen.AUTH_CODE;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
+import com.infogen.core.InfoGen_AUTH_CODE;
 
 /**
  * 会话超时
+ * 
  * @author larry/larrylv@outlook.com/创建时间 2015年5月15日 下午12:30:39
  * @since 1.0
  * @version 1.0
@@ -21,7 +22,7 @@ public class Session_Expiration_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public Integer code() {
 		// TODO Auto-generated method stub
-		return AUTH_CODE.session_expiration.code;
+		return InfoGen_AUTH_CODE.session_expiration.code;
 	}
 
 	/*
@@ -32,7 +33,7 @@ public class Session_Expiration_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public String name() {
 		// TODO Auto-generated method stub
-		return AUTH_CODE.session_expiration.name();
+		return InfoGen_AUTH_CODE.session_expiration.name();
 	}
 
 	/*
@@ -41,9 +42,9 @@ public class Session_Expiration_Exception extends InfoGen_Auth_Exception {
 	 * @see com.infogen.authc.exception.InfoGen_Auth_Exception#note()
 	 */
 	@Override
-	public String note() {
+	public String message() {
 		// TODO Auto-generated method stub
-		return AUTH_CODE.session_expiration.note;
+		return InfoGen_AUTH_CODE.session_expiration.message;
 	}
 
 }
