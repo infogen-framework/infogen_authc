@@ -77,14 +77,14 @@ public class InfoGen_HTTP_Authc_Handle {
 				return true;
 			}
 			// 需要验证的角色
-			String[] roles = operator.roles;
+			String[] resource_roles = operator.roles;
 			// 认证
 			if (subject == null) {
 				throw new Authentication_Fail_Exception();
 			} else if (subject.verifyIssued_at()) {
 				InfoGen_Session.delete(subject.getX_access_token());
 				throw new Session_Expiration_Exception();
-			} else if (subject.verifyRole(roles)) {
+			} else if (subject.verifyRole(resource_roles)) {
 				throw new Roles_Fail_Exception();
 			} else {
 				// Authentication Success

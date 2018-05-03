@@ -34,16 +34,16 @@ public class Subject implements Serializable {
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 授权
-	public Boolean verifyRole(String[] roles) throws Roles_Fail_Exception {
-		if (roles == null || roles.length == 0) {
+	public Boolean verifyRole(String[] resource_roles) throws Roles_Fail_Exception {
+		if (resource_roles == null || resource_roles.length == 0) {
 			return true;
 		}
 		if (this.roles == null) {
 			return false;
 		}
-		for (String has_role : this.roles) {
-			for (String role : roles) {
-				if (has_role.equals(role)) {
+		for (String resource_role : resource_roles) {
+			for (String role : this.roles) {
+				if (resource_role.equals(role)) {
 					return true;
 				}
 			}
