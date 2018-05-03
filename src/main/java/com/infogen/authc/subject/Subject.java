@@ -2,8 +2,6 @@ package com.infogen.authc.subject;
 
 import java.io.Serializable;
 import java.time.Clock;
-import java.util.Arrays;
-import java.util.List;
 import java.util.UUID;
 
 import com.infogen.authc.InfoGen_Session;
@@ -21,28 +19,17 @@ public class Subject implements Serializable {
 	private String x_access_token;
 	private String subject;
 	private Boolean guest;// 是否临时用户
-	private String roles;// 用户具有的角色 使用,分隔 eg:admin,employee
+	private String[] roles;// 用户具有的角色
 	private Boolean remember_me = true;
 	private Long issued_at = Clock.system(InfoGen_Session.zoneid).millis();
 
 	private Object cache;
 
-	public Subject(String subject, Boolean guest, String roles) {
-		this(subject, guest, roles == null ? new String[] {} : roles.split(","));
-	}
-
 	public Subject(String subject, Boolean guest, String[] roles) {
-		StringBuilder stringbuilder = new StringBuilder();
-		for (int i = 0; i < roles.length; i++) {
-			if (i > 0) {
-				stringbuilder.append(",");
-			}
-			stringbuilder.append(roles[i]);
-		}
 		this.x_access_token = UUID.randomUUID().toString().replaceAll("-", "");
 		this.subject = subject;
 		this.guest = guest;
-		this.roles = stringbuilder.toString();
+		this.roles = roles;
 	}
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -54,10 +41,11 @@ public class Subject implements Serializable {
 		if (this.roles == null) {
 			return false;
 		}
-		List<String> roles_list = Arrays.asList(this.roles.split(","));
-		for (String string : roles) {
-			if (roles_list.contains(string)) {
-				return true;
+		for (String has_role : this.roles) {
+			for (String role : roles) {
+				if (has_role.equals(role)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -84,11 +72,11 @@ public class Subject implements Serializable {
 		this.issued_at = issued_at;
 	}
 
-	public String getRoles() {
+	public String[] getRoles() {
 		return roles;
 	}
 
-	public void setRoles(String roles) {
+	public void setRoles(String[] roles) {
 		this.roles = roles;
 	}
 

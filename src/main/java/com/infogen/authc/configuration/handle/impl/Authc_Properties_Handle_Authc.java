@@ -39,45 +39,53 @@ public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 			LOGGER.error("格式错误 ".concat(line));
 			return;
 		}
-		String resource = Trim.trim(split[0]);
+		String uri = Trim.trim(split[0]);
 		String value = Trim.trim(split[1]);
 
 		Resource comparison = null;
 
-		if (resource.endsWith("*")) {
-			resource = resource.substring(0, resource.length() - 1);
+		if (uri.endsWith("*")) {
+			uri = uri.substring(0, uri.length() - 1);
 			comparison = new Resource_Start();
-		} else if (resource.startsWith("*")) {
-			resource = resource.substring(1, resource.length());
+		} else if (uri.startsWith("*")) {
+			uri = uri.substring(1, uri.length());
 			comparison = new Resource_End();
 		} else {
 			comparison = new Resource_Equal();
 		}
-		if (resource.contains("*")) {
+		if (uri.contains("*")) {
 			LOGGER.error("[authc] url格式错误 eg:/a/b  或 /a/* 或 *.html:".concat(line));
 			return;
 		}
-		comparison.uri = resource;
+		comparison.uri = uri;
 
 		// authc
-		String[] value_split = value.split(",");
-		if (value_split[0].trim().equals("authc")) {
-			if (value_split.length != 3) {
+		String[] value_array = value.split(",");
+		if (value_array[0].trim().equals("authc")) {
+			if (value_array.length != 3) {
 				LOGGER.error("[authc] url格式错误 eg:/* = authc,redirect|api, roles[role1,role2] :".concat(line));
 				return;
 			}
 			comparison.operation = Operation.AUTHC.name();
 
-			if (value_split[1].equals("redirect")) {
+			if (value_array[1].equals("redirect")) {
 				comparison.type = Type.REDIRECT.name();
+			} else {
+				comparison.type = Type.API.name();
 			}
 
 			String roles = value.substring(value.indexOf("roles["));
 			roles = roles.replace("roles[", "");
 			roles = roles.replace("]", "");
-			roles = Trim.trim(roles);
-			comparison.roles = roles.split(",");
+			if (roles.trim().isEmpty()) {
+				comparison.roles = new String[] {};
+			} else {
+				comparison.roles = roles.split(",");
+			}
+		} else {
+			comparison.operation = Operation.ANON.name();
 		}
+
 		urls_rules.add(comparison);
 	}
 }
