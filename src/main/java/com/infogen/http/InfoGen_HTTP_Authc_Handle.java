@@ -81,10 +81,10 @@ public class InfoGen_HTTP_Authc_Handle {
 			// 认证
 			if (subject == null) {
 				throw new Authentication_Fail_Exception();
-			} else if (subject.verifyIssued_at()) {
+			} else if (!subject.verifyIssued_at()) {
 				InfoGen_Session.delete(subject.getX_access_token());
 				throw new Session_Expiration_Exception();
-			} else if (subject.verifyRole(resource_roles)) {
+			} else if (!subject.verifyRole(resource_roles)) {
 				throw new Roles_Fail_Exception();
 			} else {
 				// Authentication Success
