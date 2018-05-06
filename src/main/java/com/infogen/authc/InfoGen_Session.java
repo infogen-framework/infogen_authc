@@ -25,7 +25,6 @@ import com.infogen.authc.subject.Subject;
 import com.infogen.authc.subject.dao.Local_Subject_DAO;
 import com.infogen.authc.subject.dao.Subject_DAO;
 import com.infogen.core.path.NativePath;
-import com.infogen.core.tools.Trim;
 
 /**
  * API认证框架的session本地缓存工具类,可以保存和获取subject
@@ -57,7 +56,7 @@ public class InfoGen_Session {
 			Authc_Properties_Handle properties_current = null;
 			String line;
 			while ((line = reader.readLine()) != null) {
-				line = Trim.trim(line);
+				line = line.trim();
 				if (line.startsWith("#")) {
 					continue;
 				} else if (line.equals("[main]")) {

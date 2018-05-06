@@ -13,7 +13,6 @@ import com.infogen.authc.resource.Resource.Type;
 import com.infogen.authc.resource.impl.Resource_End;
 import com.infogen.authc.resource.impl.Resource_Equal;
 import com.infogen.authc.resource.impl.Resource_Start;
-import com.infogen.core.tools.Trim;
 
 /**
  * 解析安全框架ini配置中[authc]方法权限配置的部分
@@ -39,8 +38,8 @@ public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 			LOGGER.error("格式错误 ".concat(line));
 			return;
 		}
-		String uri = Trim.trim(split[0]);
-		String value = Trim.trim(split[1]);
+		String uri = split[0].trim();
+		String value = split[1].trim();
 
 		Resource comparison = null;
 
