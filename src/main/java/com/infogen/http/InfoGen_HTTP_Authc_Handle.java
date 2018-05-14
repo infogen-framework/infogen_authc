@@ -1,7 +1,9 @@
 package com.infogen.http;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -19,7 +21,7 @@ import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 import com.infogen.authc.exception.impl.Session_Expiration_Exception;
 import com.infogen.authc.resource.Resource;
 import com.infogen.authc.subject.Subject;
-import com.infogen.core.json.JSONObject;
+import com.infogen.core.json.Jackson;
 
 /**
  * HTTP接口的API认证的处理器,可以通过ini配置注入使用的session管理器
@@ -94,7 +96,10 @@ public class InfoGen_HTTP_Authc_Handle {
 			if (operator.isRedirect()) {
 				response.sendRedirect(signin.concat("?code=" + e.code()));
 			} else {
-				response.getWriter().write(JSONObject.create("code", e.code().toString()).put("message", e.message()).toJson("{}"));
+				Map<String, String> map = new HashMap<>();
+				map.put("code", e.code().toString());
+				map.put("message", e.message());
+				response.getWriter().write(Jackson.toJson(map));
 			}
 			return false;
 		}
