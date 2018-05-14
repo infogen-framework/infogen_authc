@@ -21,7 +21,7 @@ import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 import com.infogen.authc.exception.impl.Session_Expiration_Exception;
 import com.infogen.authc.resource.Resource;
 import com.infogen.authc.subject.Subject;
-import com.infogen.core.json.Jackson;
+import com.infogen.json.Jackson;
 
 /**
  * HTTP接口的API认证的处理器,可以通过ini配置注入使用的session管理器
