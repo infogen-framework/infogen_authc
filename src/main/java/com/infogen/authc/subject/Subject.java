@@ -18,17 +18,16 @@ public class Subject implements Serializable {
 	private static final long serialVersionUID = 162572115555027765L;
 	private String x_access_token;
 	private String subject;
-	private Boolean guest;// 是否临时用户
 	private String[] roles;// 用户具有的角色
+	private Boolean guest = false;// 是否临时用户
 	private Boolean remember_me = true;
 	private Long issued_at = Clock.system(InfoGen_Session.zoneid).millis();
 
 	private Object cache;
 
-	public Subject(String subject, Boolean guest, String[] roles) {
+	public Subject(String subject, String[] roles) {
 		this.x_access_token = UUID.randomUUID().toString().replaceAll("-", "");
 		this.subject = subject;
-		this.guest = guest;
 		this.roles = roles;
 	}
 

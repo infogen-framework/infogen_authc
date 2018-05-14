@@ -96,10 +96,11 @@ public class InfoGen_HTTP_Authc_Handle {
 			if (operator.isRedirect()) {
 				response.sendRedirect(signin.concat("?code=" + e.code()));
 			} else {
-				Map<String, String> map = new HashMap<>();
-				map.put("code", e.code().toString());
-				map.put("message", e.message());
-				response.getWriter().write(Jackson.toJson(map));
+				Map<String, String> return_map = new HashMap<>();
+				return_map.put("code", e.code().toString());
+				return_map.put("message", e.message());
+
+				response.getWriter().write(Jackson.toJson(return_map));
 			}
 			return false;
 		}
