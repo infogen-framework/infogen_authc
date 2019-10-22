@@ -52,7 +52,7 @@ public class Subject implements Serializable {
 
 	public Boolean verifyIssued_at() {
 		Long now_millis = Clock.system(InfoGen_Session.zoneid).millis();
-		return (issued_at + InfoGen_Session.session_expire_millis) > now_millis;
+		return (issued_at + InfoGen_Session.session_expire_second * 1000) > now_millis;
 	}
 
 	public String getSubject() {
