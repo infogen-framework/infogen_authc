@@ -80,6 +80,7 @@ public class InfoGen_Session {
 	public static final ThreadLocal<HttpServletResponse> thread_local_response = new ThreadLocal<>();
 	private static Subject_DAO subject_dao = new Local_Subject_DAO();
 
+	//////////////////////////////////// CRUD///////////////////////////////////////
 	public static void save(Subject subject) {
 		thread_local_subject.set(subject);
 		if (subject.getGuest()) {
@@ -97,14 +98,17 @@ public class InfoGen_Session {
 		subject_dao.delete(x_access_token);
 	}
 
-	public static void delete_local() {
-		thread_local_subject.remove();
-	}
-
 	public static void update(Subject subject) {
 		thread_local_subject.set(subject);
 		subject_dao.update(subject);
 	}
+
+	public static Subject get() {
+		Subject subject = thread_local_subject.get();
+		return subject;
+	}
+
+	//////////////////////////////////// LOCAL///////////////////////////////////////
 
 	public static Subject load(String x_access_token) {
 		Subject subject = subject_dao.get(x_access_token);
@@ -112,9 +116,8 @@ public class InfoGen_Session {
 		return subject;
 	}
 
-	public static Subject get() {
-		Subject subject = thread_local_subject.get();
-		return subject;
+	public static void delete_local() {
+		thread_local_subject.remove();
 	}
 
 	////////////////////////////////// TOOL////////////////////////////////////////////////////

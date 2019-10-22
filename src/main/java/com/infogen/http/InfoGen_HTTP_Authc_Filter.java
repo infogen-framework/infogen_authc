@@ -39,22 +39,27 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 		InfoGen_Session.thread_local_request.set(request);
 		InfoGen_Session.thread_local_response.set(response);
 
-		// 验证权限
+		// requestURI
 		String requestURI = request.getRequestURI();
 		String contextPath = request.getContextPath();
 		if (requestURI.startsWith(contextPath)) {
 			requestURI = requestURI.substring(contextPath.length());
 		}
-		//
+
+		// x_access_token
 		String x_access_token = getCookieByName(request, InfoGen_Session.X_ACCESS_TOKEN);
 		if (x_access_token == null || x_access_token.trim().isEmpty()) {
 			x_access_token = request.getHeader(InfoGen_Session.X_ACCESS_TOKEN);
 		}
+
+		// subject
 		Subject subject = null;
 		if (x_access_token == null || x_access_token.trim().isEmpty()) {
 		} else {
 			subject = InfoGen_Session.load(x_access_token);// load 后缓存在本地一份
 		}
+
+		//
 		if (authc.doFilter(subject, requestURI, request, response)) {
 			try {
 				filterChain.doFilter(request, response);
