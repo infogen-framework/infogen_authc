@@ -23,7 +23,7 @@ public class InfoGenServletContainerInitializer implements ServletContainerIniti
 			for (Class<?> webApplicationInitializerClass : webApplicationInitializers) {
 				if (!webApplicationInitializerClass.isInterface() && !Modifier.isAbstract(webApplicationInitializerClass.getModifiers()) && WebApplicationInitializer.class.isAssignableFrom(webApplicationInitializerClass)) {
 					try {
-						((WebApplicationInitializer) webApplicationInitializerClass.newInstance()).onStartup(servletContext);
+						((WebApplicationInitializer) webApplicationInitializerClass.getDeclaredConstructor().newInstance()).onStartup(servletContext);
 					} catch (Exception ex) {
 						throw new ServletException("Failed to instantiate webApplicationInitializer class", ex);
 					}

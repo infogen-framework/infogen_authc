@@ -1,4 +1,4 @@
-package com.infogen.authc.configuration.handle.impl;
+package com.infogen.authc.configuration.handle;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -6,13 +6,12 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
-import com.infogen.authc.resource.Resource;
-import com.infogen.authc.resource.Resource.Operation;
-import com.infogen.authc.resource.Resource.Type;
-import com.infogen.authc.resource.impl.Resource_End;
-import com.infogen.authc.resource.impl.Resource_Equal;
-import com.infogen.authc.resource.impl.Resource_Start;
+import com.infogen.authc.configuration.handle.url_pattern.UrlPattern;
+import com.infogen.authc.configuration.handle.url_pattern.UrlPattern_End;
+import com.infogen.authc.configuration.handle.url_pattern.UrlPattern_Equal;
+import com.infogen.authc.configuration.handle.url_pattern.UrlPattern_Start;
+import com.infogen.authc.configuration.handle.url_pattern.UrlPattern.Operation;
+import com.infogen.authc.configuration.handle.url_pattern.UrlPattern.Type;
 
 /**
  * 解析安全框架ini配置中[authc]方法权限配置的部分
@@ -21,10 +20,10 @@ import com.infogen.authc.resource.impl.Resource_Start;
  * @since 1.0
  * @version 1.0
  */
-public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
-	private static final Logger LOGGER = LogManager.getLogger(Authc_Properties_Handle_Authc.class.getName());
+public class Properties_Handle_Authc extends Properties_Handle {
+	private static final Logger LOGGER = LogManager.getLogger(Properties_Handle_Authc.class.getName());
 
-	public static final List<Resource> urls_rules = new LinkedList<>();
+	public static final List<UrlPattern> urls_rules = new LinkedList<>();
 
 	/*
 	 * (non-Javadoc)
@@ -38,19 +37,20 @@ public class Authc_Properties_Handle_Authc extends Authc_Properties_Handle {
 			LOGGER.error("格式错误 ".concat(line));
 			return;
 		}
+
 		String uri = split[0].trim();
 		String value = split[1].trim();
 
-		Resource comparison = null;
+		UrlPattern comparison = null;
 
 		if (uri.endsWith("*")) {
 			uri = uri.substring(0, uri.length() - 1);
-			comparison = new Resource_Start();
+			comparison = new UrlPattern_Start();
 		} else if (uri.startsWith("*")) {
 			uri = uri.substring(1, uri.length());
-			comparison = new Resource_End();
+			comparison = new UrlPattern_End();
 		} else {
-			comparison = new Resource_Equal();
+			comparison = new UrlPattern_Equal();
 		}
 		if (uri.contains("*")) {
 			LOGGER.error("[authc] url格式错误 eg:/a/b  或 /a/* 或 *.html:".concat(line));

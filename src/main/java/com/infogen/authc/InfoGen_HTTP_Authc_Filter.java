@@ -1,4 +1,4 @@
-package com.infogen.http;
+package com.infogen.authc;
 
 import java.io.IOException;
 
@@ -12,7 +12,6 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import com.infogen.authc.InfoGen_Session;
 import com.infogen.authc.subject.Subject;
 
 /**
@@ -36,23 +35,21 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 			return;
 		}
 
-		InfoGen_Session.thread_local_request.set(request);
-		InfoGen_Session.thread_local_response.set(response);
+		InfoGen_Session.set_request(request);
+		InfoGen_Session.set_response(response);
 
 		// requestURI
-		String requestURI = request.getRequestURI();
+		String request_uri = request.getRequestURI();
 		String contextPath = request.getContextPath();
-		if (requestURI.startsWith(contextPath)) {
-			requestURI = requestURI.substring(contextPath.length());
+		if (request_uri.startsWith(contextPath)) {
+			request_uri = request_uri.substring(contextPath.length());
 		}
 
-		// x_access_token
+		// subject
 		String x_access_token = getCookieByName(request, InfoGen_Session.X_ACCESS_TOKEN);
 		if (x_access_token == null || x_access_token.trim().isEmpty()) {
 			x_access_token = request.getHeader(InfoGen_Session.X_ACCESS_TOKEN);
 		}
-
-		// subject
 		Subject subject = null;
 		if (x_access_token == null || x_access_token.trim().isEmpty()) {
 		} else {
@@ -60,11 +57,11 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 		}
 
 		//
-		if (authc.doFilter(subject, requestURI, request, response)) {
+		if (authc.doFilter(subject, request_uri, request, response)) {
 			try {
 				filterChain.doFilter(request, response);
 			} finally {
-				InfoGen_Session.delete_local();// 执行完后清除本地缓存的 subject
+				InfoGen_Session.clean_thread_local();// 执行完后清除本地缓存的 subject
 			}
 		}
 	}

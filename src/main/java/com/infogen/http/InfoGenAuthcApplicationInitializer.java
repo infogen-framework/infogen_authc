@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.infogen.authc.InfoGen_HTTP_Authc_Filter;
 import com.infogen.http.ServletContainerInitializer.WebApplicationInitializer;
 
 /**

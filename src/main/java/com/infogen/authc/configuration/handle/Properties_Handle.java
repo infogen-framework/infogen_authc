@@ -7,6 +7,6 @@ package com.infogen.authc.configuration.handle;
  * @since 1.0
  * @version 1.0
  */
-public abstract class Authc_Properties_Handle {
+public abstract class Properties_Handle {
 	public abstract void handle(String line);
 }

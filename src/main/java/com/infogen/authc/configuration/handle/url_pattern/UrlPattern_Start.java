@@ -1,9 +1,7 @@
 /**
  * 
  */
-package com.infogen.authc.resource.impl;
-
-import com.infogen.authc.resource.Resource;
+package com.infogen.authc.configuration.handle.url_pattern;
 
 /**
  * 
@@ -11,15 +9,14 @@ import com.infogen.authc.resource.Resource;
  * @since 1.0
  * @version 1.0
  */
-public class Resource_End extends Resource {
+public class UrlPattern_Start extends UrlPattern {
 
-	/*
-	 * (non-Javadoc)
-	 * 
+	/* (non-Javadoc)
 	 * @see com.infogen.authc.configuration.comparison.Comparison#has(java.lang.String)
 	 */
 	@Override
 	public Boolean has(String requestURI) {
-		return requestURI.endsWith(uri);
+		return requestURI.startsWith(uri);
 	}
+
 }

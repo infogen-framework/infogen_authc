@@ -16,24 +16,18 @@ import com.infogen.authc.exception.impl.Roles_Fail_Exception;
  */
 public class Subject implements Serializable {
 	private static final long serialVersionUID = 162572115555027765L;
-	private String x_access_token;
-	private String subject;
+	private String sid;
 	private String[] roles;// 用户具有的角色
-	private Boolean guest = false;// 是否临时用户
-	private Boolean remember_me = true;
-	private Long issued_at = Clock.system(InfoGen_Session.zoneid).millis();
-
 	private Object cache;
+	private Long ctime = Clock.system(InfoGen_Session.zoneid).millis();
 
-	public Subject(String subject, String[] roles) {
-		this.x_access_token = UUID.randomUUID().toString().replaceAll("-", "");
-		this.subject = subject;
+	public Subject(String[] roles) {
+		this.sid = UUID.randomUUID().toString().replaceAll("-", "");
 		this.roles = roles;
 	}
 
-	public Subject(String x_access_token, String subject, String[] roles) {
-		this.x_access_token = x_access_token;
-		this.subject = subject;
+	public Subject(String session_id, String[] roles) {
+		this.sid = session_id;
 		this.roles = roles;
 	}
 
@@ -46,8 +40,8 @@ public class Subject implements Serializable {
 		if (this.roles == null) {
 			return false;
 		}
-		for (String resource_role : resource_roles) {
-			for (String role : this.roles) {
+		for (String role : this.roles) {
+			for (String resource_role : resource_roles) {
 				if (resource_role.equals(role)) {
 					return true;
 				}
@@ -56,25 +50,16 @@ public class Subject implements Serializable {
 		return false;
 	}
 
-	public Boolean verifyIssued_at() {
-		Long now_millis = Clock.system(InfoGen_Session.zoneid).millis();
-		return (issued_at + InfoGen_Session.session_expire_second * 1000) > now_millis;
+	public Boolean verifyExpire() {
+		return (ctime + InfoGen_Session.session_expire_millis) > Clock.system(InfoGen_Session.zoneid).millis();
 	}
 
-	public String getSubject() {
-		return subject;
+	public String getSid() {
+		return sid;
 	}
 
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public Long getIssued_at() {
-		return issued_at;
-	}
-
-	public void setIssued_at(Long issued_at) {
-		this.issued_at = issued_at;
+	public void setSid(String sid) {
+		this.sid = sid;
 	}
 
 	public String[] getRoles() {
@@ -85,22 +70,6 @@ public class Subject implements Serializable {
 		this.roles = roles;
 	}
 
-	public String getX_access_token() {
-		return x_access_token;
-	}
-
-	public void setX_access_token(String x_access_token) {
-		this.x_access_token = x_access_token;
-	}
-
-	public Boolean getGuest() {
-		return guest;
-	}
-
-	public void setGuest(Boolean guest) {
-		this.guest = guest;
-	}
-
 	public Object getCache() {
 		return cache;
 	}
@@ -109,12 +78,12 @@ public class Subject implements Serializable {
 		this.cache = cache;
 	}
 
-	public Boolean getRemember_me() {
-		return remember_me;
+	public Long getCtime() {
+		return ctime;
 	}
 
-	public void setRemember_me(Boolean remember_me) {
-		this.remember_me = remember_me;
+	public void setCtime(Long ctime) {
+		this.ctime = ctime;
 	}
 
 }

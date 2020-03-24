@@ -16,21 +16,21 @@ public class Local_Subject_DAO extends Subject_DAO {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.infogen.authc.cache.Subject_DAO#delete(java.lang.String)
+	 * @see com.infogen.authc.subject.dao.Subject_DAO#create(com.infogen.authc.subject.Subject)
 	 */
 	@Override
-	public void delete(String x_access_toke) {
-		map.remove(x_access_toke);
+	public void save(Subject subject) {
+		map.put(subject.getSid(), subject);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.infogen.authc.subject.dao.Subject_DAO#create(com.infogen.authc.subject.Subject)
+	 * @see com.infogen.authc.cache.Subject_DAO#delete(java.lang.String)
 	 */
 	@Override
-	public void save(Subject subject) {
-		map.put(subject.getX_access_token(), subject);
+	public void delete(String sid) {
+		map.remove(sid);
 	}
 
 	/*
@@ -39,18 +39,8 @@ public class Local_Subject_DAO extends Subject_DAO {
 	 * @see com.infogen.authc.subject.dao.Subject_DAO#read(java.lang.String)
 	 */
 	@Override
-	public Subject get(String x_access_toke) {
-		return map.get(x_access_toke);
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.infogen.authc.subject.dao.Subject_DAO#update(com.infogen.authc.subject.Subject)
-	 */
-	@Override
-	public void update(Subject subject) {
-		map.put(subject.getX_access_token(), subject);
+	public Subject get(String sid) {
+		return map.get(sid);
 	}
 
 }

@@ -1,9 +1,7 @@
-package com.infogen.authc.configuration.handle.impl;
+package com.infogen.authc.configuration.handle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
 
 /**
  * 解析安全框架ini配置中[main] 基本配置的部分
@@ -12,9 +10,9 @@ import com.infogen.authc.configuration.handle.Authc_Properties_Handle;
  * @since 1.0
  * @version 1.0
  */
-public class Authc_Properties_Handle_Main extends Authc_Properties_Handle {
-	private static final Logger LOGGER = LogManager.getLogger(Authc_Properties_Handle_Main.class.getName());
-	public static String signin = "/";
+public class Properties_Handle_Main extends Properties_Handle {
+	private static final Logger LOGGER = LogManager.getLogger(Properties_Handle_Main.class.getName());
+	public static String login = "/";
 
 	/*
 	 * (non-Javadoc)
@@ -31,8 +29,8 @@ public class Authc_Properties_Handle_Main extends Authc_Properties_Handle {
 		String key = split[0].trim();
 		String value = split[1].trim();
 
-		if (key.equals("signin")) {
-			Authc_Properties_Handle_Main.signin = value;
+		if (key.equals("login")) {
+			Properties_Handle_Main.login = value;
 		}
 	}
 }

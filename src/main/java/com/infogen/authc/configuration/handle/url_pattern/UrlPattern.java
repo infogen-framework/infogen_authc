@@ -1,11 +1,11 @@
-package com.infogen.authc.resource;
+package com.infogen.authc.configuration.handle.url_pattern;
 
 /**
  * @author larry/larrylv@outlook.com/创建时间 2015年11月19日 上午11:48:18
  * @since 1.0
  * @version 1.0
  */
-public abstract class Resource {
+public abstract class UrlPattern {
 
 	public enum Type {
 		API, REDIRECT
@@ -28,5 +28,9 @@ public abstract class Resource {
 
 	public Boolean isRedirect() {
 		return type == Type.REDIRECT.name();
+	}
+
+	public Boolean isAPI() {
+		return type == Type.API.name();
 	}
 }

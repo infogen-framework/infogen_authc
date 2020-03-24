@@ -1,4 +1,4 @@
-package com.infogen.http;
+package com.infogen.authc;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,14 +12,13 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.infogen.authc.InfoGen_Session;
-import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Authc;
-import com.infogen.authc.configuration.handle.impl.Authc_Properties_Handle_Main;
+import com.infogen.authc.configuration.handle.Properties_Handle_Authc;
+import com.infogen.authc.configuration.handle.Properties_Handle_Main;
+import com.infogen.authc.configuration.handle.url_pattern.UrlPattern;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
 import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
 import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 import com.infogen.authc.exception.impl.Session_Expiration_Exception;
-import com.infogen.authc.resource.Resource;
 import com.infogen.authc.subject.Subject;
 import com.infogen.json.Jackson;
 
@@ -34,11 +33,11 @@ public class InfoGen_HTTP_Authc_Handle {
 	private static final Logger LOGGER = LogManager.getLogger(InfoGen_HTTP_Authc_Handle.class.getName());
 
 	// 初始化配置时赋值
-	public static final List<Resource> urls_rules = Authc_Properties_Handle_Authc.urls_rules;
-	public static String signin = Authc_Properties_Handle_Main.signin;
+	public static final String login = Properties_Handle_Main.login;
+	public static final List<UrlPattern> urls_rules = Properties_Handle_Authc.urls_rules;
 
-	public Resource has(String requestURI) {
-		for (Resource operator : urls_rules) {
+	private UrlPattern has(String requestURI) {
+		for (UrlPattern operator : urls_rules) {
 			if (operator.has(requestURI)) {
 				return operator;
 			}
@@ -46,7 +45,7 @@ public class InfoGen_HTTP_Authc_Handle {
 		return null;
 	}
 
-	public String get_ip(HttpServletRequest request) {
+	private String get_ip(HttpServletRequest request) {
 		String ip = request.getHeader("x-forwarded-for");
 		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
 			ip = request.getHeader("Proxy-Client-IP");
@@ -72,38 +71,45 @@ public class InfoGen_HTTP_Authc_Handle {
 		// 配置spring mvc 的<mvc:default-servlet-handler />后始终为空
 		// System.out.println(request.getRequestURI()); // /news/main/list.jsp
 
-		Resource operator = has(requestURI);
+		UrlPattern operator = has(requestURI);
 		try {
 			// 该方法不需要任何角色验证直接返回认证成功
 			if (operator == null || operator.anon()) {
 				return true;
 			}
 			// 需要验证的角色
-			String[] resource_roles = operator.roles;
-			// 认证
 			if (subject == null) {
 				throw new Authentication_Fail_Exception();
-			} else if (!subject.verifyIssued_at()) {
-				InfoGen_Session.delete(subject.getX_access_token());
-				throw new Session_Expiration_Exception();
-			} else if (!subject.verifyRole(resource_roles)) {
-				throw new Roles_Fail_Exception();
-			} else {
-				// Authentication Success
 			}
+
+			String[] resource_roles = operator.roles;
+			if (subject.verifyExpire() == false) {
+				InfoGen_Session.delete(subject.getSid());
+				throw new Session_Expiration_Exception();
+			}
+			if (subject.verifyRole(resource_roles) == false) {
+				throw new Roles_Fail_Exception();
+			}
+
+			// Authentication Success
 		} catch (InfoGen_Auth_Exception e) {
 			LOGGER.info("认证失败:".concat(requestURI) + " from " + get_ip(request));
+
 			if (operator.isRedirect()) {
-				response.sendRedirect(signin.concat("?code=" + e.code()));
-			} else {
+				response.sendRedirect(login.concat("?code=" + e.code()));
+				return false;
+			}
+
+			if (operator.isAPI()) {
 				Map<String, String> return_map = new HashMap<>();
 				return_map.put("code", e.code().toString());
 				return_map.put("message", e.message());
 
 				response.getWriter().write(Jackson.toJson(return_map));
+				return false;
 			}
-			return false;
 		}
+
 		return true;
 	}
 

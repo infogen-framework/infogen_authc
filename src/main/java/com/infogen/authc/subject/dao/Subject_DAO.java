@@ -15,8 +15,6 @@ public abstract class Subject_DAO {
 
 	public abstract Subject get(String subject_name);
 
-	public abstract void update(Subject subject);
-
 	// 删除会话；当会话过期/会话停止（如用户退出时）会调用
 	public abstract void delete(String subject_name);
 }

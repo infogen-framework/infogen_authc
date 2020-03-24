@@ -1,4 +1,4 @@
-package com.infogen;
+package com.infogen.authc;
 
 /**
  * infogen框架的返回值错误码
