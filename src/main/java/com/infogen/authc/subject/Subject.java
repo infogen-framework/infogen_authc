@@ -17,17 +17,20 @@ import com.infogen.authc.exception.impl.Roles_Fail_Exception;
 public class Subject implements Serializable {
 	private static final long serialVersionUID = 162572115555027765L;
 	private String sid;
+	private String uid;
 	private String[] roles;// 用户具有的角色
 	private Object cache;
 	private Long ctime = Clock.system(InfoGen_Session.zoneid).millis();
 
-	public Subject(String[] roles) {
+	public Subject(String user_id, String[] roles) {
 		this.sid = UUID.randomUUID().toString().replaceAll("-", "");
+		this.uid = user_id;
 		this.roles = roles;
 	}
 
-	public Subject(String session_id, String[] roles) {
+	public Subject(String session_id, String user_id, String[] roles) {
 		this.sid = session_id;
+		this.uid = user_id;
 		this.roles = roles;
 	}
 
@@ -60,6 +63,14 @@ public class Subject implements Serializable {
 
 	public void setSid(String sid) {
 		this.sid = sid;
+	}
+
+	public String getUid() {
+		return uid;
+	}
+
+	public void setUid(String uid) {
+		this.uid = uid;
 	}
 
 	public String[] getRoles() {
