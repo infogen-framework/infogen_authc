@@ -31,6 +31,12 @@ public class Subject implements Serializable {
 		this.roles = roles;
 	}
 
+	public Subject(String x_access_token, String subject, String[] roles) {
+		this.x_access_token = x_access_token;
+		this.subject = subject;
+		this.roles = roles;
+	}
+
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 授权
 	public Boolean verifyRole(String[] resource_roles) throws Roles_Fail_Exception {

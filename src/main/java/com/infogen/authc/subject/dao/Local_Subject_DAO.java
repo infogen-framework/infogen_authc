@@ -11,7 +11,7 @@ import com.infogen.structure.map.LRULinkedHashMap;
  * @version 1.0
  */
 public class Local_Subject_DAO extends Subject_DAO {
-	private LRULinkedHashMap<String, Subject> map = new LRULinkedHashMap<>(1000000);
+	private LRULinkedHashMap<String, Subject> map = new LRULinkedHashMap<>(5000000);
 
 	/*
 	 * (non-Javadoc)
