@@ -8,9 +8,10 @@ package com.infogen.authc;
  * @version 1.0
  */
 public enum InfoGen_AUTH_CODE {
-	authentication_fail(1000, "认证失败"), // 没有 Token
-	session_expiration(1001, "Session 过期"), //
-	roles_fail(1002, "授权失败"); // T
+	fail_auth(1000, "认证失败"), // 没有 Token
+	fail_session(1001, "Session 过期"), //
+	fail_roles(1002, "授权失败"); // T
+
 	public Integer code;
 	public String message;
 

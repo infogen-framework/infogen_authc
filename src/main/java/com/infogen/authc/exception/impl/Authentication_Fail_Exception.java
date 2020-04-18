@@ -21,7 +21,7 @@ public class Authentication_Fail_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public Integer code() {
 		// TODO Auto-generated method stub
-		return InfoGen_AUTH_CODE.authentication_fail.code;
+		return InfoGen_AUTH_CODE.fail_auth.code;
 	}
 
 	/*
@@ -32,7 +32,7 @@ public class Authentication_Fail_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public String name() {
 		// TODO Auto-generated method stub
-		return InfoGen_AUTH_CODE.authentication_fail.name();
+		return InfoGen_AUTH_CODE.fail_auth.name();
 	}
 
 	/*
@@ -43,7 +43,7 @@ public class Authentication_Fail_Exception extends InfoGen_Auth_Exception {
 	@Override
 	public String message() {
 		// TODO Auto-generated method stub
-		return InfoGen_AUTH_CODE.authentication_fail.message;
+		return InfoGen_AUTH_CODE.fail_auth.message;
 	}
 
 }
