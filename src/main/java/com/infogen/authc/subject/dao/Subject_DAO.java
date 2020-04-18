@@ -11,10 +11,10 @@ import com.infogen.authc.subject.Subject;
  */
 public abstract class Subject_DAO {
 	// 如DefaultSessionManager在创建完session后会调用该方法；如保存到关系数据库/文件系统/NoSQL数据库；即可以实现会话的持久化；返回会话ID；主要此处返回的ID.equals(session.getId())；
-	public abstract void save(Subject subject);
+	public abstract void set(Subject subject);
 
 	public abstract Subject get(String subject_name);
 
 	// 删除会话；当会话过期/会话停止（如用户退出时）会调用
-	public abstract void delete(String subject_name);
+	public abstract void remove(String subject_name);
 }

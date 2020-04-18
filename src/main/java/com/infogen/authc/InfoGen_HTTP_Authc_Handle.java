@@ -84,7 +84,7 @@ public class InfoGen_HTTP_Authc_Handle {
 
 			String[] resource_roles = operator.roles;
 			if (subject.verifyExpire() == false) {
-				InfoGen_Session.delete(subject.getSid());
+				InfoGen_Session.remove(subject.getSid());
 				throw new Fail_Session_Exception();
 			}
 			if (subject.verifyRole(resource_roles) == false) {

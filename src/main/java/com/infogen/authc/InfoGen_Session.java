@@ -54,9 +54,9 @@ public class InfoGen_Session {
 
 	public final static Integer cookie_expire_second = 30 * 24 * 60 * 60;
 
-	public static void save(Subject subject) {
+	public static void set(Subject subject) {
 		thread_local_subject.set(subject);
-		subject_dao.save(subject);
+		subject_dao.set(subject);
 
 		set_cookie(X_ACCESS_TOKEN, subject.getSid(), cookie_expire_second);
 	}
@@ -67,9 +67,9 @@ public class InfoGen_Session {
 		return remote_subject;
 	}
 
-	public static void delete(String x_access_token) {
+	public static void remove(String x_access_token) {
 		thread_local_subject.remove();
-		subject_dao.delete(x_access_token);
+		subject_dao.remove(x_access_token);
 	}
 
 	public static Subject get() {

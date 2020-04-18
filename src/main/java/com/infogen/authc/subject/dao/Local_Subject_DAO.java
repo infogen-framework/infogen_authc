@@ -16,27 +16,27 @@ public class Local_Subject_DAO extends Subject_DAO {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.infogen.authc.subject.dao.Subject_DAO#create(com.infogen.authc.subject.Subject)
+	 * @see com.infogen.authc.subject.dao.Subject_DAO#set(com.infogen.authc.subject.Subject)
 	 */
 	@Override
-	public void save(Subject subject) {
+	public void set(Subject subject) {
 		map.put(subject.getSid(), subject);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.infogen.authc.cache.Subject_DAO#delete(java.lang.String)
+	 * @see com.infogen.authc.cache.Subject_DAO#remove(java.lang.String)
 	 */
 	@Override
-	public void delete(String sid) {
+	public void remove(String sid) {
 		map.remove(sid);
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.infogen.authc.subject.dao.Subject_DAO#read(java.lang.String)
+	 * @see com.infogen.authc.subject.dao.Subject_DAO#get(java.lang.String)
 	 */
 	@Override
 	public Subject get(String sid) {
