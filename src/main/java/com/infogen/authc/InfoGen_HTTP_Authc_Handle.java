@@ -16,9 +16,9 @@ import com.infogen.authc.configuration.handle.Properties_Handle_Authc;
 import com.infogen.authc.configuration.handle.Properties_Handle_Main;
 import com.infogen.authc.configuration.handle.url_pattern.UrlPattern;
 import com.infogen.authc.exception.InfoGen_Auth_Exception;
-import com.infogen.authc.exception.impl.Authentication_Fail_Exception;
-import com.infogen.authc.exception.impl.Roles_Fail_Exception;
-import com.infogen.authc.exception.impl.Session_Expiration_Exception;
+import com.infogen.authc.exception.impl.Fail_Auth_Exception;
+import com.infogen.authc.exception.impl.Fail_Roles_Exception;
+import com.infogen.authc.exception.impl.Fail_Session_Exception;
 import com.infogen.authc.subject.Subject;
 import com.infogen.json.Jackson;
 
@@ -79,16 +79,16 @@ public class InfoGen_HTTP_Authc_Handle {
 			}
 			// 需要验证的角色
 			if (subject == null) {
-				throw new Authentication_Fail_Exception();
+				throw new Fail_Auth_Exception();
 			}
 
 			String[] resource_roles = operator.roles;
 			if (subject.verifyExpire() == false) {
 				InfoGen_Session.delete(subject.getSid());
-				throw new Session_Expiration_Exception();
+				throw new Fail_Session_Exception();
 			}
 			if (subject.verifyRole(resource_roles) == false) {
-				throw new Roles_Fail_Exception();
+				throw new Fail_Roles_Exception();
 			}
 
 			// Authentication Success

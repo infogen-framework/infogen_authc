@@ -10,7 +10,7 @@ import com.infogen.authc.exception.InfoGen_Auth_Exception;
  * @since 1.0
  * @version 1.0
  */
-public class Session_Expiration_Exception extends InfoGen_Auth_Exception {
+public class Fail_Session_Exception extends InfoGen_Auth_Exception {
 
 	private static final long serialVersionUID = -3944897882402426587L;
 

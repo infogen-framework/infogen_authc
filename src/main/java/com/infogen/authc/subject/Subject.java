@@ -5,7 +5,7 @@ import java.time.Clock;
 import java.util.UUID;
 
 import com.infogen.authc.InfoGen_Session;
-import com.infogen.authc.exception.impl.Roles_Fail_Exception;
+import com.infogen.authc.exception.impl.Fail_Roles_Exception;
 
 /**
  * 安全认证实例
@@ -36,7 +36,7 @@ public class Subject implements Serializable {
 
 	// //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 授权
-	public Boolean verifyRole(String[] resource_roles) throws Roles_Fail_Exception {
+	public Boolean verifyRole(String[] resource_roles) throws Fail_Roles_Exception {
 		if (resource_roles == null || resource_roles.length == 0) {
 			return true;
 		}
