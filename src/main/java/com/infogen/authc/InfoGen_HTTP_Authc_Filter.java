@@ -46,9 +46,9 @@ public class InfoGen_HTTP_Authc_Filter implements Filter {
 		}
 
 		// subject
-		String x_access_token = getCookieByName(request, InfoGen_Session.X_ACCESS_TOKEN);
+		String x_access_token = request.getHeader(InfoGen_Session.X_ACCESS_TOKEN);
 		if (x_access_token == null || x_access_token.trim().isEmpty()) {
-			x_access_token = request.getHeader(InfoGen_Session.X_ACCESS_TOKEN);
+			x_access_token = getCookieByName(request, InfoGen_Session.X_ACCESS_TOKEN);
 		}
 		Subject subject = null;
 		if (x_access_token == null || x_access_token.trim().isEmpty()) {
