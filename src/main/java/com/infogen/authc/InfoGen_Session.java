@@ -82,7 +82,7 @@ public class InfoGen_Session {
 			Cookie cookie = new Cookie(x_access_token, value);
 			cookie.setPath("/");
 			cookie.setMaxAge(max_age);
-			// cookie.setSecure(true);
+			cookie.setSecure(true);
 			cookie.setHttpOnly(true);
 			response.addCookie(cookie);
 		}
