@@ -9,7 +9,6 @@
 		<relativePath>../infogen_combine</relativePath>
 	</parent>
 	<artifactId>infogen_authc</artifactId>
-	<version>${global.version}</version>
 	<packaging>jar</packaging>
 	<name>${project.groupId}:${project.artifactId}</name>
 	<url>https://github.com/infogen7/infogen_authc</url>
